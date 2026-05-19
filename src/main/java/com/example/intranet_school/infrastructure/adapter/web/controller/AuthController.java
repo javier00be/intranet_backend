@@ -1,12 +1,13 @@
 package com.example.intranet_school.infrastructure.adapter.web.controller;
 
-import com.example.intranet_school.application.dto.*;
+import com.example.intranet_school.application.dto.AuthResponse;
+import com.example.intranet_school.application.dto.LoginRequest;
+import com.example.intranet_school.application.dto.RegisterRequest;
 import com.example.intranet_school.domain.ports.in.AuthUseCase;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -23,12 +24,5 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
         return ResponseEntity.ok(authUseCase.register(request));
-    }
-
-    @GetMapping("/dashboard")
-    public ResponseEntity<Map<String, Object>> getDashboard(
-            @RequestParam String role,
-            @RequestParam Long userId) {
-        return ResponseEntity.ok(authUseCase.getDashboardData(role, userId));
     }
 }

@@ -7,8 +7,6 @@ import com.example.intranet_school.domain.ports.out.JwtPort;
 import com.example.intranet_school.domain.ports.out.UsuarioRepositoryPort;
 import lombok.RequiredArgsConstructor;
 import com.example.intranet_school.domain.ports.out.PasswordEncryptorPort;
-import java.util.HashMap;
-import java.util.Map;
 
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthUseCase {
@@ -50,31 +48,6 @@ public class AuthServiceImpl implements AuthUseCase {
         UsuarioDTO userDTO = toUsuarioDTO(usuario);
 
         return AuthResponse.builder().success(true).token(token).user(userDTO).build();
-    }
-
-    @Override
-    public Map<String, Object> getDashboardData(String role, Long userId) {
-        Map<String, Object> data = new HashMap<>();
-        
-        switch (role) {
-            case "DIRECTOR":
-                data.put("totalEstudiantes", 150);
-                data.put("totalProfesores", 20);
-                data.put("totalCursos", 25);
-                data.put("pagosPendientes", 15);
-                break;
-            case "PROFESOR":
-                data.put("misCursos", 5);
-                data.put("misTareas", 12);
-                data.put("misAlumnos", 80);
-                break;
-            case "ESTUDIANTE":
-                data.put("misCursos", 6);
-                data.put("misTareas", 8);
-                data.put("misNotas", 24);
-                break;
-        }
-        return data;
     }
 
     private UsuarioDTO toUsuarioDTO(Usuario usuario) {
