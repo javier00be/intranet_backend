@@ -6,6 +6,7 @@ import com.example.intranet_school.domain.model.Pago;
 import com.example.intranet_school.domain.ports.in.PagoUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,18 +19,21 @@ public class PagoController {
     private final PagoUseCase pagoUseCase;
 
     @GetMapping
+    @PreAuthorize("hasRole('DIRECTOR')")
     public ResponseEntity<List<PagoDTO>> getAllPagos() {
         return ResponseEntity.ok(pagoUseCase.getAllPagos().stream()
                 .map(this::toDTO).collect(Collectors.toList()));
     }
 
     @GetMapping("/estudiante/{estudianteId}")
+    @PreAuthorize("hasAnyRole('DIRECTOR', 'PADRE')")
     public ResponseEntity<List<PagoDTO>> getPagosByEstudiante(@PathVariable Long estudianteId) {
         return ResponseEntity.ok(pagoUseCase.getPagosByEstudiante(estudianteId).stream()
                 .map(this::toDTO).collect(Collectors.toList()));
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('DIRECTOR', 'PADRE')")
     public ResponseEntity<PagoDTO> createPago(@RequestBody PagoDTO dto) {
         return ResponseEntity.ok(toDTO(pagoUseCase.createPago(toDomain(dto))));
     }

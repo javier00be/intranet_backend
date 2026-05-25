@@ -19,6 +19,7 @@ public class DataInitializer implements CommandLineRunner {
         if (!usuarioRepository.existsByEmail("director@escuela.com")) {
             crearUsuario("director@escuela.com", "Director", "Administrativo", "DIRECTOR", "director123");
             crearUsuario("profesor@escuela.com", "Juan", "Pérez", "PROFESOR", "profesor123");
+            crearUsuario("padre@escuela.com", "Carlos", "López", "PADRE", "padre123");
             crearUsuario("estudiante@escuela.com", "María", "García", "ESTUDIANTE", "estudiante123");
             System.out.println("=== USUARIOS DE PRUEBA CREADOS ===");
         }

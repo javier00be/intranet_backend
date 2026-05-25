@@ -51,6 +51,6 @@ public class UsuarioEntity {
     }
 
     public enum Rol {
-        DIRECTOR, PROFESOR, ESTUDIANTE
+        DIRECTOR, PROFESOR, PADRE, ESTUDIANTE
     }
 }

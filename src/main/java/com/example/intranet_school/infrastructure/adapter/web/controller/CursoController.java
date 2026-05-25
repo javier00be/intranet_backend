@@ -6,6 +6,7 @@ import com.example.intranet_school.domain.model.Profesor;
 import com.example.intranet_school.domain.ports.in.CursoUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,12 +19,14 @@ public class CursoController {
     private final CursoUseCase cursoUseCase;
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('DIRECTOR', 'PROFESOR', 'PADRE', 'ESTUDIANTE')")
     public ResponseEntity<List<CursoDTO>> getAllCursos() {
         return ResponseEntity.ok(cursoUseCase.getAllCursos().stream()
                 .map(this::toDTO).collect(Collectors.toList()));
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('DIRECTOR', 'PROFESOR', 'PADRE', 'ESTUDIANTE')")
     public ResponseEntity<CursoDTO> getCursoById(@PathVariable Long id) {
         return cursoUseCase.getCursoById(id)
                 .map(this::toDTO)
@@ -32,16 +35,19 @@ public class CursoController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('DIRECTOR')")
     public ResponseEntity<CursoDTO> createCurso(@RequestBody CursoDTO dto) {
         return ResponseEntity.ok(toDTO(cursoUseCase.createCurso(toDomain(dto))));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('DIRECTOR')")
     public ResponseEntity<CursoDTO> updateCurso(@PathVariable Long id, @RequestBody CursoDTO dto) {
         return ResponseEntity.ok(toDTO(cursoUseCase.updateCurso(id, toDomain(dto))));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('DIRECTOR')")
     public ResponseEntity<Void> deleteCurso(@PathVariable Long id) {
         cursoUseCase.deleteCurso(id);
         return ResponseEntity.noContent().build();

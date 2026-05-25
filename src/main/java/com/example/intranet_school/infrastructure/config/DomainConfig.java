@@ -1,16 +1,8 @@
 package com.example.intranet_school.infrastructure.config;
 
-import com.example.intranet_school.domain.ports.in.AuthUseCase;
-import com.example.intranet_school.domain.ports.in.CursoUseCase;
-import com.example.intranet_school.domain.ports.in.DashboardUseCase;
-import com.example.intranet_school.domain.ports.in.PagoUseCase;
-import com.example.intranet_school.domain.ports.in.ProfesorUseCase;
+import com.example.intranet_school.domain.ports.in.*;
 import com.example.intranet_school.domain.ports.out.*;
-import com.example.intranet_school.domain.service.AuthServiceImpl;
-import com.example.intranet_school.domain.service.CursoServiceImpl;
-import com.example.intranet_school.domain.service.DashboardServiceImpl;
-import com.example.intranet_school.domain.service.PagoServiceImpl;
-import com.example.intranet_school.domain.service.ProfesorServiceImpl;
+import com.example.intranet_school.domain.service.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -46,5 +38,17 @@ public class DomainConfig {
                                              PagoRepositoryPort pagoRepositoryPort) {
         return new DashboardServiceImpl(estudianteRepositoryPort, profesorRepositoryPort,
                 cursoRepositoryPort, pagoRepositoryPort);
+    }
+
+    @Bean
+    public PadreUseCase padreUseCase(PadreRepositoryPort padreRepositoryPort,
+                                     EstudianteRepositoryPort estudianteRepositoryPort) {
+        return new PadreServiceImpl(padreRepositoryPort, estudianteRepositoryPort);
+    }
+
+    @Bean
+    public ChatUseCase chatUseCase(ConversacionRepositoryPort conversacionRepositoryPort,
+                                   MensajeRepositoryPort mensajeRepositoryPort) {
+        return new ChatServiceImpl(conversacionRepositoryPort, mensajeRepositoryPort);
     }
 }

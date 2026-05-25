@@ -7,11 +7,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Tarea {
+public class Mensaje {
     private Long id;
-    private Curso curso;
-    private String titulo;
-    private String descripcion;
-    private LocalDateTime fechaEntrega;
-    private String archivoUrl;
+    private Long conversacionId;
+    private Usuario emisor;
+    private String contenido;
+    private LocalDateTime enviadoEn;
+    private Boolean leido;
 }
