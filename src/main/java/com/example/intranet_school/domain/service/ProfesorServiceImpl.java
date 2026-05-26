@@ -40,4 +40,9 @@ public class ProfesorServiceImpl implements ProfesorUseCase {
     public void deleteProfesor(Long id) {
         profesorRepositoryPort.deleteById(id);
     }
+
+    @Override
+    public void reactivateProfesor(Long id) {
+        profesorRepositoryPort.reactivateById(id);
+    }
 }

@@ -1,15 +1,17 @@
 package com.example.intranet_school.domain.service;
 
+import com.example.intranet_school.domain.event.PagoRegistradoEvent;
 import com.example.intranet_school.domain.model.Pago;
 import com.example.intranet_school.domain.ports.in.PagoUseCase;
+import com.example.intranet_school.domain.ports.out.EventPublisherPort;
 import com.example.intranet_school.domain.ports.out.PagoRepositoryPort;
 import lombok.RequiredArgsConstructor;
-
 import java.util.List;
 
 @RequiredArgsConstructor
 public class PagoServiceImpl implements PagoUseCase {
     private final PagoRepositoryPort pagoRepositoryPort;
+    private final EventPublisherPort eventPublisherPort;
 
     @Override
     public List<Pago> getAllPagos() {
@@ -23,13 +25,19 @@ public class PagoServiceImpl implements PagoUseCase {
 
     @Override
     public Pago createPago(Pago pago) {
-        return pagoRepositoryPort.save(pago);
+        Pago saved = pagoRepositoryPort.save(pago);
+        if (saved.getEstudiante() != null) {
+            eventPublisherPort.publish(new PagoRegistradoEvent(
+                    saved.getEstudiante().getId(),
+                    saved.getMonto(),
+                    saved.getConcepto()
+            ));
+        }
+        return saved;
     }
 
     @Override
     public Pago updatePagoStatus(Long id, String estado) {
-        // En una implementación real, buscaríamos el pago y actualizaríamos su estado
-        // Por ahora lo dejamos simplificado para la arquitectura hexagonal
         return null;
     }
 }

@@ -31,7 +31,18 @@ public class ProfesorRepositoryAdapter implements ProfesorRepositoryPort {
 
     @Override
     public void deleteById(Long id) {
-        profesorJpaRepository.deleteById(id);
+        profesorJpaRepository.findById(id).ifPresent(e -> {
+            e.setActivo(false);
+            profesorJpaRepository.save(e);
+        });
+    }
+
+    @Override
+    public void reactivateById(Long id) {
+        profesorJpaRepository.findById(id).ifPresent(e -> {
+            e.setActivo(true);
+            profesorJpaRepository.save(e);
+        });
     }
 
     @Override

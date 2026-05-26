@@ -17,6 +17,7 @@ public class ProfesorMapper {
         domain.setEspecialidad(entity.getEspecialidad());
         domain.setTelefono(entity.getTelefono());
         domain.setUsuario(usuarioMapper.toDomain(entity.getUsuario()));
+        domain.setActivo(entity.isActivo());
         return domain;
     }
 
@@ -27,6 +28,7 @@ public class ProfesorMapper {
         entity.setEspecialidad(domain.getEspecialidad());
         entity.setTelefono(domain.getTelefono());
         entity.setUsuario(usuarioMapper.toEntity(domain.getUsuario()));
+        entity.setActivo(domain.isActivo());
         return entity;
     }
 }

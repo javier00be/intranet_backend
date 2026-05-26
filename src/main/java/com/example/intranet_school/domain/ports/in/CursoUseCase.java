@@ -11,4 +11,5 @@ public interface CursoUseCase {
     Curso createCurso(Curso curso);
     Curso updateCurso(Long id, Curso curso);
     void deleteCurso(Long id);
+    void reactivateCurso(Long id);
 }

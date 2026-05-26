@@ -10,5 +10,6 @@ public interface CursoRepositoryPort {
     List<Curso> findByNivelAndGrado(Estudiante.NivelEducativo nivel, Integer grado);
     Curso save(Curso curso);
     void deleteById(Long id);
+    void reactivateById(Long id);
     java.util.Optional<Curso> findById(Long id);
 }

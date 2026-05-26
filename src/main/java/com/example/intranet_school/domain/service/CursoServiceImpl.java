@@ -45,4 +45,9 @@ public class CursoServiceImpl implements CursoUseCase {
     public void deleteCurso(Long id) {
         cursoRepositoryPort.deleteById(id);
     }
+
+    @Override
+    public void reactivateCurso(Long id) {
+        cursoRepositoryPort.reactivateById(id);
+    }
 }

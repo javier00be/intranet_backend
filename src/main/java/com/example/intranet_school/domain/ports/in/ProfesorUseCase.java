@@ -10,4 +10,5 @@ public interface ProfesorUseCase {
     Profesor createProfesor(Profesor profesor);
     Profesor updateProfesor(Long id, Profesor profesor);
     void deleteProfesor(Long id);
+    void reactivateProfesor(Long id);
 }

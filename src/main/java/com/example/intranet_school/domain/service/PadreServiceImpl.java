@@ -42,6 +42,11 @@ public class PadreServiceImpl implements PadreUseCase {
     }
 
     @Override
+    public void reactivatePadre(Long id) {
+        padreRepositoryPort.reactivateById(id);
+    }
+
+    @Override
     public Padre addHijo(Long padreId, Long estudianteId) {
         Padre padre = padreRepositoryPort.findById(padreId)
                 .orElseThrow(() -> new RuntimeException("Padre no encontrado: " + padreId));

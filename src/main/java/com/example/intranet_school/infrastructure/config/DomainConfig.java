@@ -22,8 +22,9 @@ public class DomainConfig {
     }
 
     @Bean
-    public PagoUseCase pagoUseCase(PagoRepositoryPort pagoRepositoryPort) {
-        return new PagoServiceImpl(pagoRepositoryPort);
+    public PagoUseCase pagoUseCase(PagoRepositoryPort pagoRepositoryPort,
+                                   EventPublisherPort eventPublisherPort) {
+        return new PagoServiceImpl(pagoRepositoryPort, eventPublisherPort);
     }
 
     @Bean

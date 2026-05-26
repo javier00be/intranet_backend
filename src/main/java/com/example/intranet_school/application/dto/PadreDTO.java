@@ -12,4 +12,5 @@ public class PadreDTO {
     private UsuarioDTO usuario;
     private String telefono;
     private List<Long> hijoIds;
+    private boolean activo = true;
 }

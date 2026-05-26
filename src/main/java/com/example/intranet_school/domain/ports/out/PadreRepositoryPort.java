@@ -8,6 +8,8 @@ public interface PadreRepositoryPort {
     List<Padre> findAll();
     Optional<Padre> findById(Long id);
     Optional<Padre> findByUsuarioId(Long usuarioId);
+    List<Padre> findByHijoId(Long estudianteId);
     Padre save(Padre padre);
     void deleteById(Long id);
+    void reactivateById(Long id);
 }

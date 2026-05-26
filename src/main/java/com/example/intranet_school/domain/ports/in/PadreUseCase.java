@@ -10,6 +10,7 @@ public interface PadreUseCase {
     Padre createPadre(Padre padre);
     Padre updatePadre(Long id, Padre padre);
     void deletePadre(Long id);
+    void reactivatePadre(Long id);
     Padre addHijo(Long padreId, Long estudianteId);
     Padre removeHijo(Long padreId, Long estudianteId);
 }

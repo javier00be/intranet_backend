@@ -53,15 +53,23 @@ public class CursoController {
         return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping("/{id}/reactivar")
+    @PreAuthorize("hasRole('DIRECTOR')")
+    public ResponseEntity<Void> reactivateCurso(@PathVariable Long id) {
+        cursoUseCase.reactivateCurso(id);
+        return ResponseEntity.noContent().build();
+    }
+
     private CursoDTO toDTO(Curso curso) {
         CursoDTO dto = new CursoDTO();
         dto.setId(curso.getId());
         dto.setNombre(curso.getNombre());
         dto.setDescripcion(curso.getDescripcion());
         dto.setNivel(curso.getNivel());
-        dto.setGrado(curso.getGrado());
+        dto.setGrados(curso.getGrados());
         dto.setSeccion(curso.getSeccion());
         dto.setAño(curso.getAño());
+        dto.setActivo(curso.isActivo());
         if (curso.getProfesor() != null) {
             dto.setProfesorId(curso.getProfesor().getId());
             if (curso.getProfesor().getUsuario() != null) {
@@ -78,7 +86,7 @@ public class CursoController {
         curso.setNombre(dto.getNombre());
         curso.setDescripcion(dto.getDescripcion());
         curso.setNivel(dto.getNivel());
-        curso.setGrado(dto.getGrado());
+        curso.setGrados(dto.getGrados());
         curso.setSeccion(dto.getSeccion());
         curso.setAño(dto.getAño());
         if (dto.getProfesorId() != null) {

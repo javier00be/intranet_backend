@@ -9,5 +9,6 @@ public interface ProfesorRepositoryPort {
     List<Profesor> findAll();
     Profesor save(Profesor profesor);
     void deleteById(Long id);
+    void reactivateById(Long id);
     Optional<Profesor> findById(Long id);
 }

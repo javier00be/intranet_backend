@@ -30,7 +30,13 @@ public class PadreRepositoryAdapter implements PadreRepositoryPort {
 
     @Override
     public Optional<Padre> findByUsuarioId(Long usuarioId) {
-        return padreJpaRepository.findByUsuarioId(usuarioId).map(padreMapper::toDomain);
+        return padreJpaRepository.findByUsuarioIdAndActivoTrue(usuarioId).map(padreMapper::toDomain);
+    }
+
+    @Override
+    public List<Padre> findByHijoId(Long estudianteId) {
+        return padreJpaRepository.findByHijoId(estudianteId).stream()
+                .map(padreMapper::toDomain).collect(Collectors.toList());
     }
 
     @Override
@@ -40,6 +46,17 @@ public class PadreRepositoryAdapter implements PadreRepositoryPort {
 
     @Override
     public void deleteById(Long id) {
-        padreJpaRepository.deleteById(id);
+        padreJpaRepository.findById(id).ifPresent(e -> {
+            e.setActivo(false);
+            padreJpaRepository.save(e);
+        });
+    }
+
+    @Override
+    public void reactivateById(Long id) {
+        padreJpaRepository.findById(id).ifPresent(e -> {
+            e.setActivo(true);
+            padreJpaRepository.save(e);
+        });
     }
 }

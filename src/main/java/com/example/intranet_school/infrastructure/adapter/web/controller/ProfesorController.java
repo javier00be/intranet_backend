@@ -54,6 +54,13 @@ public class ProfesorController {
         return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping("/{id}/reactivar")
+    @PreAuthorize("hasRole('DIRECTOR')")
+    public ResponseEntity<Void> reactivateProfesor(@PathVariable Long id) {
+        profesorUseCase.reactivateProfesor(id);
+        return ResponseEntity.noContent().build();
+    }
+
     private ProfesorDTO toDTO(Profesor profesor) {
         UsuarioDTO usuarioDTO = null;
         if (profesor.getUsuario() != null) {
@@ -72,6 +79,7 @@ public class ProfesorController {
                 .usuario(usuarioDTO)
                 .especialidad(profesor.getEspecialidad())
                 .telefono(profesor.getTelefono())
+                .activo(profesor.isActivo())
                 .build();
     }
 

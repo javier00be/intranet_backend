@@ -6,7 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface CursoJpaRepository extends JpaRepository<CursoEntity, Long> {
-    List<CursoEntity> findByProfesorId(Long profesorId);
-    List<CursoEntity> findByNivelAndGrado(EstudianteEntity.NivelEducativo nivel, Integer grado);
-    List<CursoEntity> findByAño(Integer año);
+    List<CursoEntity> findAllByActivoTrue();
+    List<CursoEntity> findByProfesorIdAndActivoTrue(Long profesorId);
+    List<CursoEntity> findByNivelAndActivoTrue(EstudianteEntity.NivelEducativo nivel);
+    List<CursoEntity> findByAñoAndActivoTrue(Integer año);
 }

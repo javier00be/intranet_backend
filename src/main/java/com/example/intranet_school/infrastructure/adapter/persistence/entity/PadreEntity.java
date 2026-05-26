@@ -21,6 +21,8 @@ public class PadreEntity {
     private UsuarioEntity usuario;
 
     private String telefono;
+    @Builder.Default
+    private boolean activo = true;
 
     @ManyToMany
     @JoinTable(

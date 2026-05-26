@@ -12,4 +12,5 @@ public class Padre {
     private Usuario usuario;
     private String telefono;
     private List<Estudiante> hijos;
+    private boolean activo = true;
 }

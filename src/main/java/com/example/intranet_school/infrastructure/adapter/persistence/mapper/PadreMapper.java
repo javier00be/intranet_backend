@@ -25,6 +25,7 @@ public class PadreMapper {
                 .usuario(usuarioMapper.toDomain(entity.getUsuario()))
                 .telefono(entity.getTelefono())
                 .hijos(hijos)
+                .activo(entity.isActivo())
                 .build();
     }
 
@@ -40,6 +41,7 @@ public class PadreMapper {
                 .usuario(usuarioMapper.toEntity(domain.getUsuario()))
                 .telefono(domain.getTelefono())
                 .hijos(hijos)
+                .activo(domain.isActivo())
                 .build();
     }
 }

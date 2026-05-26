@@ -55,6 +55,13 @@ public class PadreController {
         return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping("/{id}/reactivar")
+    @PreAuthorize("hasRole('DIRECTOR')")
+    public ResponseEntity<Void> reactivatePadre(@PathVariable Long id) {
+        padreUseCase.reactivatePadre(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @PostMapping("/{padreId}/hijos/{estudianteId}")
     @PreAuthorize("hasRole('DIRECTOR')")
     public ResponseEntity<PadreDTO> addHijo(@PathVariable Long padreId, @PathVariable Long estudianteId) {
@@ -88,6 +95,7 @@ public class PadreController {
                 .usuario(usuarioDTO)
                 .telefono(padre.getTelefono())
                 .hijoIds(hijoIds)
+                .activo(padre.isActivo())
                 .build();
     }
 

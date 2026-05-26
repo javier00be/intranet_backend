@@ -14,4 +14,5 @@ public class ProfesorDTO {
     private UsuarioDTO usuario;
     private String especialidad;
     private String telefono;
+    private boolean activo = true;
 }

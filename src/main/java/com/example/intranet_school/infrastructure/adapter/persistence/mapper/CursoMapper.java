@@ -8,6 +8,8 @@ import com.example.intranet_school.infrastructure.adapter.persistence.entity.Est
 import com.example.intranet_school.infrastructure.adapter.persistence.entity.ProfesorEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+
 @Component
 public class CursoMapper {
 
@@ -17,9 +19,10 @@ public class CursoMapper {
         domain.setId(entity.getId());
         domain.setNombre(entity.getNombre());
         domain.setDescripcion(entity.getDescripcion());
-        domain.setGrado(entity.getGrado());
+        domain.setGrados(entity.getGrados() != null ? new ArrayList<>(entity.getGrados()) : new ArrayList<>());
         domain.setSeccion(entity.getSeccion());
         domain.setAño(entity.getAño());
+        domain.setActivo(entity.isActivo());
         if (entity.getNivel() != null) {
             domain.setNivel(Estudiante.NivelEducativo.valueOf(entity.getNivel().name()));
         }
@@ -37,9 +40,10 @@ public class CursoMapper {
         entity.setId(domain.getId());
         entity.setNombre(domain.getNombre());
         entity.setDescripcion(domain.getDescripcion());
-        entity.setGrado(domain.getGrado());
+        entity.setGrados(domain.getGrados() != null ? new ArrayList<>(domain.getGrados()) : new ArrayList<>());
         entity.setSeccion(domain.getSeccion());
         entity.setAño(domain.getAño());
+        entity.setActivo(domain.isActivo());
         if (domain.getNivel() != null) {
             entity.setNivel(EstudianteEntity.NivelEducativo.valueOf(domain.getNivel().name()));
         }

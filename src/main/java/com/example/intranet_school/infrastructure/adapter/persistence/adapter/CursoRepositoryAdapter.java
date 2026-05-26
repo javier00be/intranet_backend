@@ -28,15 +28,16 @@ public class CursoRepositoryAdapter implements CursoRepositoryPort {
 
     @Override
     public List<Curso> findByProfesorId(Long profesorId) {
-        return cursoJpaRepository.findByProfesorId(profesorId).stream()
+        return cursoJpaRepository.findByProfesorIdAndActivoTrue(profesorId).stream()
                 .map(cursoMapper::toDomain)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<Curso> findByNivelAndGrado(Estudiante.NivelEducativo nivel, Integer grado) {
-        return cursoJpaRepository.findByNivelAndGrado(
-                EstudianteEntity.NivelEducativo.valueOf(nivel.name()), grado).stream()
+        return cursoJpaRepository.findByNivelAndActivoTrue(
+                EstudianteEntity.NivelEducativo.valueOf(nivel.name())).stream()
+                .filter(e -> e.getGrados().contains(grado))
                 .map(cursoMapper::toDomain)
                 .collect(Collectors.toList());
     }
@@ -48,7 +49,18 @@ public class CursoRepositoryAdapter implements CursoRepositoryPort {
 
     @Override
     public void deleteById(Long id) {
-        cursoJpaRepository.deleteById(id);
+        cursoJpaRepository.findById(id).ifPresent(e -> {
+            e.setActivo(false);
+            cursoJpaRepository.save(e);
+        });
+    }
+
+    @Override
+    public void reactivateById(Long id) {
+        cursoJpaRepository.findById(id).ifPresent(e -> {
+            e.setActivo(true);
+            cursoJpaRepository.save(e);
+        });
     }
 
     @Override

@@ -20,4 +20,6 @@ public class ProfesorEntity {
 
     private String especialidad;
     private String telefono;
+    @Builder.Default
+    private boolean activo = true;
 }
