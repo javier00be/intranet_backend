@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface MensajeRepositoryPort {
+
     Mensaje save(Mensaje mensaje);
     List<Mensaje> findByConversacionId(Long conversacionId);
     void deleteByEnviadoEnBefore(LocalDateTime fecha);
