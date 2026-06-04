@@ -27,6 +27,9 @@ public class UsuarioEntity {
     @Column(nullable = false)
     private String apellido;
 
+    @Column(name = "apellido_materno")
+    private String apellidoMaterno;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Rol rol;

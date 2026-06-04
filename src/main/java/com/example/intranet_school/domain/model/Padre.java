@@ -10,6 +10,7 @@ import java.util.List;
 public class Padre {
     private Long id;
     private Usuario usuario;
+    private String dni;
     private String telefono;
     private List<Estudiante> hijos;
     private boolean activo = true;

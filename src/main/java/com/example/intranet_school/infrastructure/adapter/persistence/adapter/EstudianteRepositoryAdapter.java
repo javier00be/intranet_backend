@@ -3,6 +3,7 @@ package com.example.intranet_school.infrastructure.adapter.persistence.adapter;
 import com.example.intranet_school.domain.model.Estudiante;
 import com.example.intranet_school.domain.ports.out.EstudianteRepositoryPort;
 import com.example.intranet_school.infrastructure.adapter.persistence.entity.EstudianteEntity;
+import com.example.intranet_school.infrastructure.adapter.persistence.entity.UsuarioEntity;
 import com.example.intranet_school.infrastructure.adapter.persistence.repository.EstudianteJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -56,6 +57,7 @@ public class EstudianteRepositoryAdapter implements EstudianteRepositoryPort {
     private Estudiante mapToDomain(EstudianteEntity entity) {
         Estudiante domain = new Estudiante();
         domain.setId(entity.getId());
+        domain.setDni(entity.getDni());
         domain.setFechaNacimiento(entity.getFechaNacimiento());
         domain.setDireccion(entity.getDireccion());
         domain.setTelefono(entity.getTelefono());
@@ -70,11 +72,18 @@ public class EstudianteRepositoryAdapter implements EstudianteRepositoryPort {
     private EstudianteEntity mapToEntity(Estudiante domain) {
         EstudianteEntity entity = new EstudianteEntity();
         entity.setId(domain.getId());
+        entity.setDni(domain.getDni());
         entity.setFechaNacimiento(domain.getFechaNacimiento());
         entity.setDireccion(domain.getDireccion());
         entity.setTelefono(domain.getTelefono());
         entity.setGrado(domain.getGrado());
         entity.setSeccion(domain.getSeccion());
+        if (domain.getNivel() != null) {
+            entity.setNivel(EstudianteEntity.NivelEducativo.valueOf(domain.getNivel().name()));
+        }
+        if (domain.getUsuario() != null && domain.getUsuario().getId() != null) {
+            entity.setUsuario(UsuarioEntity.builder().id(domain.getUsuario().getId()).build());
+        }
         return entity;
     }
 }

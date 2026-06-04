@@ -19,6 +19,9 @@ public class EstudianteEntity {
     @JoinColumn(name = "usuario_id", nullable = false, unique = true)
     private UsuarioEntity usuario;
 
+    @Column(unique = true)
+    private String dni;
+
     @Column(name = "fecha_nacimiento")
     private LocalDate fechaNacimiento;
 

@@ -20,6 +20,9 @@ public class PadreEntity {
     @JoinColumn(name = "usuario_id", nullable = false, unique = true)
     private UsuarioEntity usuario;
 
+    @Column(unique = true)
+    private String dni;
+
     private String telefono;
     @Builder.Default
     private boolean activo = true;

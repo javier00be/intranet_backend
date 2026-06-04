@@ -10,6 +10,7 @@ import java.time.LocalDate;
 public class Estudiante {
     private Long id;
     private Usuario usuario;
+    private String dni;
     private LocalDate fechaNacimiento;
     private String direccion;
     private String telefono;

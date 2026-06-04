@@ -52,4 +52,21 @@ public class DomainConfig {
                                    MensajeRepositoryPort mensajeRepositoryPort) {
         return new ChatServiceImpl(conversacionRepositoryPort, mensajeRepositoryPort);
     }
+
+    @Bean
+    public MensualidadUseCase mensualidadUseCase(MensualidadRepositoryPort mensualidadRepositoryPort) {
+        return new MensualidadServiceImpl(mensualidadRepositoryPort);
+    }
+
+    @Bean
+    public MatriculaUseCase matriculaUseCase(MatriculaRepositoryPort matriculaRepositoryPort,
+                                             EstudianteRepositoryPort estudianteRepositoryPort,
+                                             PadreRepositoryPort padreRepositoryPort,
+                                             UsuarioRepositoryPort usuarioRepositoryPort,
+                                             PasswordEncryptorPort passwordEncryptorPort,
+                                             MensualidadRepositoryPort mensualidadRepositoryPort) {
+        return new MatriculaServiceImpl(matriculaRepositoryPort, estudianteRepositoryPort,
+                padreRepositoryPort, usuarioRepositoryPort, passwordEncryptorPort,
+                mensualidadRepositoryPort);
+    }
 }

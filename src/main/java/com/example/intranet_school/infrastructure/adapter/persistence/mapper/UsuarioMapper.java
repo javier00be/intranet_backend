@@ -14,6 +14,7 @@ public class UsuarioMapper {
                 .password(entity.getPassword())
                 .nombre(entity.getNombre())
                 .apellido(entity.getApellido())
+                .apellidoMaterno(entity.getApellidoMaterno())
                 .rol(mapRol(entity.getRol()))
                 .avatar(entity.getAvatar())
                 .createdAt(entity.getCreatedAt())
@@ -29,6 +30,7 @@ public class UsuarioMapper {
                 .password(domain.getPassword())
                 .nombre(domain.getNombre())
                 .apellido(domain.getApellido())
+                .apellidoMaterno(domain.getApellidoMaterno())
                 .rol(mapRolToEntity(domain.getRol()))
                 .avatar(domain.getAvatar())
                 .build();
