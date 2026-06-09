@@ -23,6 +23,11 @@ public class ProfesorServiceImpl implements ProfesorUseCase {
     }
 
     @Override
+    public Optional<Profesor> getByEmail(String email) {
+        return profesorRepositoryPort.findByUsuarioEmail(email);
+    }
+
+    @Override
     public Profesor createProfesor(Profesor profesor) {
         return profesorRepositoryPort.save(profesor);
     }

@@ -17,8 +17,9 @@ public class DomainConfig {
     }
 
     @Bean
-    public CursoUseCase cursoUseCase(CursoRepositoryPort cursoRepositoryPort) {
-        return new CursoServiceImpl(cursoRepositoryPort);
+    public CursoUseCase cursoUseCase(CursoRepositoryPort cursoRepositoryPort,
+                                     ProfesorRepositoryPort profesorRepositoryPort) {
+        return new CursoServiceImpl(cursoRepositoryPort, profesorRepositoryPort);
     }
 
     @Bean
@@ -59,14 +60,17 @@ public class DomainConfig {
     }
 
     @Bean
-    public MatriculaUseCase matriculaUseCase(MatriculaRepositoryPort matriculaRepositoryPort,
-                                             EstudianteRepositoryPort estudianteRepositoryPort,
-                                             PadreRepositoryPort padreRepositoryPort,
-                                             UsuarioRepositoryPort usuarioRepositoryPort,
-                                             PasswordEncryptorPort passwordEncryptorPort,
-                                             MensualidadRepositoryPort mensualidadRepositoryPort) {
-        return new MatriculaServiceImpl(matriculaRepositoryPort, estudianteRepositoryPort,
-                padreRepositoryPort, usuarioRepositoryPort, passwordEncryptorPort,
-                mensualidadRepositoryPort);
+    public EstudianteUseCase estudianteUseCase(EstudianteRepositoryPort estudianteRepositoryPort) {
+        return new EstudianteServiceImpl(estudianteRepositoryPort);
+    }
+
+    @Bean
+    public CalificacionUseCase calificacionUseCase(CalificacionRepositoryPort calificacionRepositoryPort) {
+        return new CalificacionServiceImpl(calificacionRepositoryPort);
+    }
+
+    @Bean
+    public AsistenciaUseCase asistenciaUseCase(AsistenciaRepositoryPort asistenciaRepositoryPort) {
+        return new AsistenciaServiceImpl(asistenciaRepositoryPort);
     }
 }

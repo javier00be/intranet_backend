@@ -9,6 +9,8 @@ import com.example.intranet_school.domain.ports.in.PadreUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import com.example.intranet_school.infrastructure.adapter.web.security.UserPrincipal;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +21,16 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PadreController {
     private final PadreUseCase padreUseCase;
+
+    @GetMapping("/me")
+    @PreAuthorize("hasRole('PADRE')")
+    public ResponseEntity<PadreDTO> getMe(Authentication auth) {
+        Long userId = ((UserPrincipal) auth.getPrincipal()).getId();
+        return padreUseCase.getPadreByUsuarioId(userId)
+                .map(this::toDTO)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 
     @GetMapping
     @PreAuthorize("hasRole('DIRECTOR')")

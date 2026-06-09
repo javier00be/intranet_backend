@@ -17,6 +17,7 @@ public class Matricula {
     private EstadoPago estadoPago;
     private Double montoMatricula;
     private Double montoMensualidad;
+    private Integer diaPago;
     private LocalDateTime fechaCreacion;
 
     public enum Estado { ACTIVA, INACTIVA, FINALIZADA }

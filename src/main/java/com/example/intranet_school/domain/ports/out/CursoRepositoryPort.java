@@ -12,4 +12,5 @@ public interface CursoRepositoryPort {
     void deleteById(Long id);
     void reactivateById(Long id);
     java.util.Optional<Curso> findById(Long id);
+    long count();
 }

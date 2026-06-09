@@ -7,6 +7,7 @@ import java.util.Optional;
 public interface ProfesorUseCase {
     List<Profesor> getAllProfesores();
     Optional<Profesor> getProfesorById(Long id);
+    Optional<Profesor> getByEmail(String email);
     Profesor createProfesor(Profesor profesor);
     Profesor updateProfesor(Long id, Profesor profesor);
     void deleteProfesor(Long id);

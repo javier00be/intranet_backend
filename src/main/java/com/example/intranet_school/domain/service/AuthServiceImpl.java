@@ -7,6 +7,7 @@ import com.example.intranet_school.domain.ports.out.JwtPort;
 import com.example.intranet_school.domain.ports.out.UsuarioRepositoryPort;
 import lombok.RequiredArgsConstructor;
 import com.example.intranet_school.domain.ports.out.PasswordEncryptorPort;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthUseCase {
@@ -16,12 +17,13 @@ public class AuthServiceImpl implements AuthUseCase {
 
     @Override
     public AuthResponse login(LoginRequest request) {
-        Usuario usuario = usuarioRepositoryPort.findByEmail(request.getEmail()).orElse(null);
+        Optional<Usuario> usuarioOpt = usuarioRepositoryPort.findByEmail(request.getEmail());
 
-        if (usuario == null || !passwordEncryptorPort.matches(request.getPassword(), usuario.getPassword())) {
+        if (usuarioOpt.isEmpty() || !passwordEncryptorPort.matches(request.getPassword(), usuarioOpt.get().getPassword())) {
             return AuthResponse.builder().success(false).message("Credenciales inválidas").build();
         }
 
+        Usuario usuario = usuarioOpt.get();
         String token = jwtPort.generateToken(usuario);
         UsuarioDTO userDTO = toUsuarioDTO(usuario);
 

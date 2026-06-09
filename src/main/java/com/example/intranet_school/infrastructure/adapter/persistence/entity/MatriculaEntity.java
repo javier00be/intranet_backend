@@ -41,6 +41,9 @@ public class MatriculaEntity {
     @Column(name = "monto_mensualidad")
     private Double montoMensualidad;
 
+    @Column(name = "dia_pago")
+    private Integer diaPago;
+
     @Column(name = "fecha_creacion", updatable = false)
     private LocalDateTime fechaCreacion;
 

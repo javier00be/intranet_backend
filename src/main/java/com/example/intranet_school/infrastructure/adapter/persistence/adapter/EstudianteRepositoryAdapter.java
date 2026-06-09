@@ -1,12 +1,14 @@
 package com.example.intranet_school.infrastructure.adapter.persistence.adapter;
 
 import com.example.intranet_school.domain.model.Estudiante;
+import com.example.intranet_school.domain.model.Usuario;
 import com.example.intranet_school.domain.ports.out.EstudianteRepositoryPort;
 import com.example.intranet_school.infrastructure.adapter.persistence.entity.EstudianteEntity;
 import com.example.intranet_school.infrastructure.adapter.persistence.entity.UsuarioEntity;
 import com.example.intranet_school.infrastructure.adapter.persistence.repository.EstudianteJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +16,7 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class EstudianteRepositoryAdapter implements EstudianteRepositoryPort {
     private final EstudianteJpaRepository estudianteJpaRepository;
 
@@ -40,11 +43,21 @@ public class EstudianteRepositoryAdapter implements EstudianteRepositoryPort {
     }
 
     @Override
+    public List<Estudiante> findByNivelAndGrado(Estudiante.NivelEducativo nivel, Integer grado) {
+        return estudianteJpaRepository.findByNivelAndGrado(
+                EstudianteEntity.NivelEducativo.valueOf(nivel.name()), grado).stream()
+                .map(this::mapToDomain)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
     public Estudiante save(Estudiante estudiante) {
         return mapToDomain(estudianteJpaRepository.save(mapToEntity(estudiante)));
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         estudianteJpaRepository.deleteById(id);
     }
@@ -52,6 +65,11 @@ public class EstudianteRepositoryAdapter implements EstudianteRepositoryPort {
     @Override
     public Optional<Estudiante> findById(Long id) {
         return estudianteJpaRepository.findById(id).map(this::mapToDomain);
+    }
+
+    @Override
+    public long count() {
+        return estudianteJpaRepository.count();
     }
 
     private Estudiante mapToDomain(EstudianteEntity entity) {
@@ -65,6 +83,14 @@ public class EstudianteRepositoryAdapter implements EstudianteRepositoryPort {
         domain.setSeccion(entity.getSeccion());
         if (entity.getNivel() != null) {
             domain.setNivel(Estudiante.NivelEducativo.valueOf(entity.getNivel().name()));
+        }
+        if (entity.getUsuario() != null) {
+            Usuario usuario = new Usuario();
+            usuario.setId(entity.getUsuario().getId());
+            usuario.setNombre(entity.getUsuario().getNombre());
+            usuario.setApellido(entity.getUsuario().getApellido());
+            usuario.setEmail(entity.getUsuario().getEmail());
+            domain.setUsuario(usuario);
         }
         return domain;
     }

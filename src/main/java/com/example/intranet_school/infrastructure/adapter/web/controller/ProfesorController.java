@@ -20,7 +20,7 @@ public class ProfesorController {
     private final ProfesorUseCase profesorUseCase;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('DIRECTOR', 'PROFESOR')")
+    @PreAuthorize("hasAnyRole('DIRECTOR', 'PROFESOR', 'PADRE')")
     public ResponseEntity<List<ProfesorDTO>> getAllProfesores() {
         return ResponseEntity.ok(profesorUseCase.getAllProfesores().stream()
                 .map(this::toDTO).collect(Collectors.toList()));

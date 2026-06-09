@@ -10,5 +10,6 @@ public interface AsistenciaRepositoryPort {
     List<Asistencia> findByCursoId(Long cursoId);
     List<Asistencia> findByFecha(java.time.LocalDate fecha);
     Asistencia save(Asistencia asistencia);
+    List<Asistencia> saveAll(List<Asistencia> asistencias);
     void deleteById(Long id);
 }

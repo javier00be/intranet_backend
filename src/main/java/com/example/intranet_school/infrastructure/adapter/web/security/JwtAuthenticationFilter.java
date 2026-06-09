@@ -35,11 +35,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String token = authHeader.substring(7);
             
             if (jwtPort.validateToken(token)) {
-                Long userId = jwtPort.getUserIdFromToken(token);
-                String role = jwtPort.getRoleFromToken(token);
-                
+                Long userId  = jwtPort.getUserIdFromToken(token);
+                String email = jwtPort.getEmailFromToken(token);
+                String role  = jwtPort.getRoleFromToken(token);
+
+                UserPrincipal principal = new UserPrincipal(userId, email);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userId, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role))
+                        principal, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role))
                 );
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }

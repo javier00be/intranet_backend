@@ -19,6 +19,7 @@ public class MatriculaMapper {
         matricula.setFechaCreacion(entity.getFechaCreacion());
         matricula.setMontoMatricula(entity.getMontoMatricula());
         matricula.setMontoMensualidad(entity.getMontoMensualidad());
+        matricula.setDiaPago(entity.getDiaPago());
 
         if (entity.getEstado() != null) {
             matricula.setEstado(Matricula.Estado.valueOf(entity.getEstado().name()));
@@ -57,6 +58,7 @@ public class MatriculaMapper {
         entity.setGrado(domain.getGrado());
         entity.setMontoMatricula(domain.getMontoMatricula());
         entity.setMontoMensualidad(domain.getMontoMensualidad());
+        entity.setDiaPago(domain.getDiaPago());
 
         if (domain.getEstado() != null) {
             entity.setEstado(MatriculaEntity.Estado.valueOf(domain.getEstado().name()));

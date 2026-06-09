@@ -1,16 +1,20 @@
 package com.example.intranet_school.domain.service;
 
 import com.example.intranet_school.domain.model.Curso;
+import com.example.intranet_school.domain.model.Estudiante;
 import com.example.intranet_school.domain.ports.in.CursoUseCase;
 import com.example.intranet_school.domain.ports.out.CursoRepositoryPort;
+import com.example.intranet_school.domain.ports.out.ProfesorRepositoryPort;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 public class CursoServiceImpl implements CursoUseCase {
     private final CursoRepositoryPort cursoRepositoryPort;
+    private final ProfesorRepositoryPort profesorRepositoryPort;
 
     @Override
     public List<Curso> getAllCursos() {
@@ -25,6 +29,18 @@ public class CursoServiceImpl implements CursoUseCase {
     @Override
     public List<Curso> getCursosByProfesor(Long profesorId) {
         return cursoRepositoryPort.findByProfesorId(profesorId);
+    }
+
+    @Override
+    public List<Curso> getCursosByProfesorEmail(String email) {
+        return profesorRepositoryPort.findByUsuarioEmail(email)
+                .map(p -> cursoRepositoryPort.findByProfesorId(p.getId()))
+                .orElse(Collections.emptyList());
+    }
+
+    @Override
+    public List<Curso> getCursosByNivelAndGrado(Estudiante.NivelEducativo nivel, Integer grado) {
+        return cursoRepositoryPort.findByNivelAndGrado(nivel, grado);
     }
 
     @Override

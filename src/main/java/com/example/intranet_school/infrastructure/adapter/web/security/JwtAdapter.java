@@ -14,7 +14,7 @@ import java.util.Map;
 
 @Component
 public class JwtAdapter implements JwtPort {
-    @Value("${jwt.secret:mySecretKeyForJWTTokenGenerationThatIsLongEnough12345}")
+    @Value("${jwt.secret}")
     private String secret;
 
     @Value("${jwt.expiration:86400000}")
@@ -43,6 +43,11 @@ public class JwtAdapter implements JwtPort {
     @Override
     public Long getUserIdFromToken(String token) {
         return getClaims(token).get("id", Long.class);
+    }
+
+    @Override
+    public String getEmailFromToken(String token) {
+        return getClaims(token).getSubject();
     }
 
     @Override

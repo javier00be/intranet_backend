@@ -24,6 +24,11 @@ public class MensualidadServiceImpl implements MensualidadUseCase {
     }
 
     @Override
+    public List<Mensualidad> getByEstudiante(Long estudianteId) {
+        return mensualidadRepositoryPort.findByEstudianteId(estudianteId);
+    }
+
+    @Override
     public Mensualidad pagarMensualidad(Long id) {
         Mensualidad mensualidad = mensualidadRepositoryPort.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Mensualidad no encontrada: " + id));

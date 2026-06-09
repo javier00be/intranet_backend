@@ -8,6 +8,7 @@ import java.util.Optional;
 public interface MensualidadRepositoryPort {
     List<Mensualidad> findAll();
     List<Mensualidad> findByMatriculaId(Long matriculaId);
+    List<Mensualidad> findByEstudianteId(Long estudianteId);
     Optional<Mensualidad> findById(Long id);
     Mensualidad save(Mensualidad mensualidad);
     List<Mensualidad> saveAll(List<Mensualidad> mensualidades);

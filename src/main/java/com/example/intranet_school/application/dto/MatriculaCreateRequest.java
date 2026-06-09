@@ -22,6 +22,9 @@ public class MatriculaCreateRequest {
     private String padrePassword;
     private String padreTelefono;
 
+    // Día del mes en que vence cada mensualidad (1-31, se ajusta al último día del mes si excede)
+    private Integer diaPago;
+
     // Lista de alumnos a matricular
     private List<AlumnoMatriculaRequest> alumnos;
 }

@@ -26,6 +26,13 @@ public class MensualidadController {
                 .collect(Collectors.toList()));
     }
 
+    @GetMapping("/estudiante/{estudianteId}")
+    @PreAuthorize("hasAnyRole('DIRECTOR', 'PADRE')")
+    public ResponseEntity<List<MensualidadDTO>> getByEstudiante(@PathVariable Long estudianteId) {
+        return ResponseEntity.ok(mensualidadUseCase.getByEstudiante(estudianteId).stream()
+                .map(this::toDTO).collect(Collectors.toList()));
+    }
+
     @GetMapping("/matricula/{matriculaId}")
     @PreAuthorize("hasAnyRole('DIRECTOR', 'PADRE', 'ESTUDIANTE')")
     public ResponseEntity<List<MensualidadDTO>> getByMatricula(@PathVariable Long matriculaId) {

@@ -14,6 +14,7 @@ import java.time.LocalDate;
 public class EstudianteDTO {
     private Long id;
     private UsuarioDTO usuario;
+    private String dni;
     private LocalDate fechaNacimiento;
     private String direccion;
     private String telefono;

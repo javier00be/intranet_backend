@@ -49,4 +49,14 @@ public class ProfesorRepositoryAdapter implements ProfesorRepositoryPort {
     public Optional<Profesor> findById(Long id) {
         return profesorJpaRepository.findById(id).map(profesorMapper::toDomain);
     }
+
+    @Override
+    public Optional<Profesor> findByUsuarioEmail(String email) {
+        return profesorJpaRepository.findByUsuarioEmail(email).map(profesorMapper::toDomain);
+    }
+
+    @Override
+    public long count() {
+        return profesorJpaRepository.countByActivoTrue();
+    }
 }

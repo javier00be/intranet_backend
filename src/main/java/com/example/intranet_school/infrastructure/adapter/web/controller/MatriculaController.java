@@ -7,6 +7,7 @@ import com.example.intranet_school.domain.ports.in.MatriculaUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,15 @@ import java.util.stream.Collectors;
 public class MatriculaController {
 
     private final MatriculaUseCase matriculaUseCase;
+
+    @GetMapping("/mi-matricula")
+    @PreAuthorize("hasRole('ESTUDIANTE')")
+    public ResponseEntity<MatriculaDTO> getMiMatricula(Authentication auth) {
+        return matriculaUseCase.getMiMatricula(auth.getName())
+                .map(this::toDTO)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 
     @GetMapping
     @PreAuthorize("hasRole('DIRECTOR')")
@@ -38,26 +48,16 @@ public class MatriculaController {
 
     @PostMapping
     @PreAuthorize("hasRole('DIRECTOR')")
-    public ResponseEntity<?> crearMatriculas(@RequestBody MatriculaCreateRequest request) {
-        try {
-            return ResponseEntity.ok(matriculaUseCase.crearMatriculas(request).stream()
-                    .map(this::toDTO)
-                    .collect(Collectors.toList()));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<List<MatriculaDTO>> crearMatriculas(@RequestBody MatriculaCreateRequest request) {
+        return ResponseEntity.ok(matriculaUseCase.crearMatriculas(request).stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList()));
     }
 
     @PatchMapping("/{id}/pagar")
     @PreAuthorize("hasRole('DIRECTOR')")
-    public ResponseEntity<?> pagarMatricula(@PathVariable Long id) {
-        try {
-            return ResponseEntity.ok(toDTO(matriculaUseCase.pagarMatricula(id)));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        } catch (IllegalStateException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<MatriculaDTO> pagarMatricula(@PathVariable Long id) {
+        return ResponseEntity.ok(toDTO(matriculaUseCase.pagarMatricula(id)));
     }
 
     @DeleteMapping("/{id}")

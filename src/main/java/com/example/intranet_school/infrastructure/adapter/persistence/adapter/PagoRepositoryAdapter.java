@@ -47,4 +47,9 @@ public class PagoRepositoryAdapter implements PagoRepositoryPort {
     public void deleteById(Long id) {
         pagoJpaRepository.deleteById(id);
     }
+
+    @Override
+    public long countByEstado(Pago.Estado estado) {
+        return pagoJpaRepository.countByEstado(PagoEntity.Estado.valueOf(estado.name()));
+    }
 }

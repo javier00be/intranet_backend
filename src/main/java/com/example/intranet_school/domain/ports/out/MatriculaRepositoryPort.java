@@ -9,6 +9,7 @@ public interface MatriculaRepositoryPort {
     List<Matricula> findAll();
     Optional<Matricula> findById(Long id);
     List<Matricula> findByEstudianteId(Long estudianteId);
+    Optional<Matricula> findActivaByUsuarioEmail(String email);
     Matricula save(Matricula matricula);
     void deleteById(Long id);
 }

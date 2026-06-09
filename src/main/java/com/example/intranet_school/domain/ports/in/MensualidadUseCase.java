@@ -7,5 +7,6 @@ import java.util.List;
 public interface MensualidadUseCase {
     List<Mensualidad> getAll();
     List<Mensualidad> getByMatricula(Long matriculaId);
+    List<Mensualidad> getByEstudiante(Long estudianteId);
     Mensualidad pagarMensualidad(Long id);
 }

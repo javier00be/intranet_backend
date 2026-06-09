@@ -1,13 +1,10 @@
 package com.example.intranet_school.domain.service;
 
 import com.example.intranet_school.application.dto.DashboardDTO;
-import com.example.intranet_school.domain.model.Curso;
 import com.example.intranet_school.domain.model.Pago;
 import com.example.intranet_school.domain.ports.in.DashboardUseCase;
 import com.example.intranet_school.domain.ports.out.*;
 import lombok.RequiredArgsConstructor;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 public class DashboardServiceImpl implements DashboardUseCase {
@@ -28,10 +25,10 @@ public class DashboardServiceImpl implements DashboardUseCase {
 
     private DashboardDTO buildDirectorDashboard() {
         return DashboardDTO.builder()
-                .totalEstudiantes((long) estudianteRepositoryPort.findAll().size())
-                .totalProfesores((long) profesorRepositoryPort.findAll().size())
-                .totalCursos((long) cursoRepositoryPort.findAll().size())
-                .pagosPendientes((long) pagoRepositoryPort.findByEstado(Pago.Estado.PENDIENTE).size())
+                .totalEstudiantes(estudianteRepositoryPort.count())
+                .totalProfesores(profesorRepositoryPort.count())
+                .totalCursos(cursoRepositoryPort.count())
+                .pagosPendientes(pagoRepositoryPort.countByEstado(Pago.Estado.PENDIENTE))
                 .build();
     }
 

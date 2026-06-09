@@ -2,11 +2,13 @@ package com.example.intranet_school.infrastructure.adapter.web.controller;
 
 import com.example.intranet_school.application.dto.CursoDTO;
 import com.example.intranet_school.domain.model.Curso;
+import com.example.intranet_school.domain.model.Estudiante;
 import com.example.intranet_school.domain.model.Profesor;
 import com.example.intranet_school.domain.ports.in.CursoUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,9 +22,24 @@ public class CursoController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('DIRECTOR', 'PROFESOR', 'PADRE', 'ESTUDIANTE')")
-    public ResponseEntity<List<CursoDTO>> getAllCursos() {
-        return ResponseEntity.ok(cursoUseCase.getAllCursos().stream()
-                .map(this::toDTO).collect(Collectors.toList()));
+    public ResponseEntity<List<CursoDTO>> getAllCursos(
+            @RequestParam(required = false) String nivel,
+            @RequestParam(required = false) Integer grado) {
+        List<Curso> cursos;
+        if (nivel != null && grado != null) {
+            cursos = cursoUseCase.getCursosByNivelAndGrado(
+                    Estudiante.NivelEducativo.valueOf(nivel), grado);
+        } else {
+            cursos = cursoUseCase.getAllCursos();
+        }
+        return ResponseEntity.ok(cursos.stream().map(this::toDTO).collect(Collectors.toList()));
+    }
+
+    @GetMapping("/mis-cursos")
+    @PreAuthorize("hasRole('PROFESOR')")
+    public ResponseEntity<List<CursoDTO>> getMisCursos(Authentication auth) {
+        return ResponseEntity.ok(cursoUseCase.getCursosByProfesorEmail(auth.getName())
+                .stream().map(this::toDTO).collect(Collectors.toList()));
     }
 
     @GetMapping("/{id}")

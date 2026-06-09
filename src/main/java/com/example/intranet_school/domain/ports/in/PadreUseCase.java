@@ -13,4 +13,5 @@ public interface PadreUseCase {
     void reactivatePadre(Long id);
     Padre addHijo(Long padreId, Long estudianteId);
     Padre removeHijo(Long padreId, Long estudianteId);
+    Optional<Padre> getPadreByUsuarioId(Long usuarioId);
 }

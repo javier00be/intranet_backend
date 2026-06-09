@@ -6,10 +6,10 @@ import com.example.intranet_school.domain.model.*;
 import com.example.intranet_school.domain.ports.in.MatriculaUseCase;
 import com.example.intranet_school.domain.ports.out.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +35,6 @@ public class MatriculaServiceImpl implements MatriculaUseCase {
     }
 
     @Override
-    @Transactional
     public List<Matricula> crearMatriculas(MatriculaCreateRequest request) {
         if (request.getAlumnos() == null || request.getAlumnos().isEmpty()) {
             throw new IllegalArgumentException("Debe incluir al menos un alumno");
@@ -51,7 +50,7 @@ public class MatriculaServiceImpl implements MatriculaUseCase {
 
         List<Matricula> resultado = new ArrayList<>();
         for (AlumnoMatriculaRequest alumnoReq : request.getAlumnos()) {
-            resultado.add(crearAlumnoYMatricula(alumnoReq, padre));
+            resultado.add(crearAlumnoYMatricula(alumnoReq, padre, request.getDiaPago()));
         }
         return resultado;
     }
@@ -84,7 +83,7 @@ public class MatriculaServiceImpl implements MatriculaUseCase {
         return padreRepositoryPort.save(padre);
     }
 
-    private Matricula crearAlumnoYMatricula(AlumnoMatriculaRequest req, Padre padre) {
+    private Matricula crearAlumnoYMatricula(AlumnoMatriculaRequest req, Padre padre, Integer diaPago) {
         // Crear usuario del alumno
         Usuario alumnoUsuario = new Usuario();
         alumnoUsuario.setEmail(req.getEmail());
@@ -128,12 +127,12 @@ public class MatriculaServiceImpl implements MatriculaUseCase {
         matricula.setEstadoPago(Matricula.EstadoPago.PENDIENTE);
         matricula.setMontoMatricula(req.getMontoMatricula());
         matricula.setMontoMensualidad(req.getMontoMensualidad());
+        matricula.setDiaPago(diaPago != null ? diaPago : 15);
 
         return matriculaRepositoryPort.save(matricula);
     }
 
     @Override
-    @Transactional
     public Matricula pagarMatricula(Long id) {
         Matricula matricula = matriculaRepositoryPort.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Matrícula no encontrada: " + id));
@@ -151,7 +150,6 @@ public class MatriculaServiceImpl implements MatriculaUseCase {
     }
 
     private List<Mensualidad> generarMensualidades(Matricula matricula) {
-        // Año escolar peruano: marzo a diciembre (10 meses)
         Mensualidad.Mes[] meses = {
             Mensualidad.Mes.MARZO, Mensualidad.Mes.ABRIL, Mensualidad.Mes.MAYO,
             Mensualidad.Mes.JUNIO, Mensualidad.Mes.JULIO, Mensualidad.Mes.AGOSTO,
@@ -159,18 +157,28 @@ public class MatriculaServiceImpl implements MatriculaUseCase {
             Mensualidad.Mes.DICIEMBRE
         };
 
+        int diaPago = matricula.getDiaPago() != null ? matricula.getDiaPago() : 15;
+
         List<Mensualidad> resultado = new ArrayList<>();
         for (Mensualidad.Mes mes : meses) {
+            YearMonth ym = YearMonth.of(matricula.getAño(), mes.numero());
+            int diaReal = Math.min(diaPago, ym.lengthOfMonth());
+
             Mensualidad m = new Mensualidad();
             m.setMatricula(matricula);
             m.setMes(mes);
             m.setAño(matricula.getAño());
             m.setMonto(matricula.getMontoMensualidad());
             m.setEstadoPago(Mensualidad.EstadoPago.PENDIENTE);
-            m.setFechaVencimiento(LocalDate.of(matricula.getAño(), mes.numero(), 15));
+            m.setFechaVencimiento(LocalDate.of(matricula.getAño(), mes.numero(), diaReal));
             resultado.add(m);
         }
         return resultado;
+    }
+
+    @Override
+    public Optional<Matricula> getMiMatricula(String email) {
+        return matriculaRepositoryPort.findActivaByUsuarioEmail(email);
     }
 
     @Override

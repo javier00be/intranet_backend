@@ -10,7 +10,8 @@ import com.example.intranet_school.domain.ports.in.ChatUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import com.example.intranet_school.infrastructure.adapter.web.security.UserPrincipal;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +26,8 @@ public class ChatRestController {
     @GetMapping("/conversaciones")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<ConversacionDTO>> getMisConversaciones(
-            UsernamePasswordAuthenticationToken auth) {
-        Long userId = (Long) auth.getPrincipal();
+            Authentication auth) {
+        Long userId = ((UserPrincipal) auth.getPrincipal()).getId();
         return ResponseEntity.ok(chatUseCase.getConversacionesByUsuario(userId).stream()
                 .map(this::toConversacionDTO).collect(Collectors.toList()));
     }
@@ -35,18 +36,30 @@ public class ChatRestController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<MensajeDTO>> getMensajes(
             @PathVariable Long conversacionId,
-            UsernamePasswordAuthenticationToken auth) {
-        Long userId = (Long) auth.getPrincipal();
+            Authentication auth) {
+        Long userId = ((UserPrincipal) auth.getPrincipal()).getId();
         return ResponseEntity.ok(chatUseCase.getMensajesByConversacion(conversacionId, userId).stream()
                 .map(this::toMensajeDTO).collect(Collectors.toList()));
+    }
+
+    @PostMapping("/mensajes/send")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<MensajeDTO> sendMensaje(
+            @RequestBody Map<String, Object> body,
+            Authentication auth) {
+        Long emisorId = ((UserPrincipal) auth.getPrincipal()).getId();
+        Long receptorId = ((Number) body.get("receptorId")).longValue();
+        String contenido = (String) body.get("contenido");
+        Mensaje mensaje = chatUseCase.enviarMensaje(emisorId, receptorId, contenido);
+        return ResponseEntity.ok(toMensajeDTO(mensaje));
     }
 
     @PostMapping("/conversaciones")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ConversacionDTO> iniciarConversacion(
             @RequestBody Map<String, Long> body,
-            UsernamePasswordAuthenticationToken auth) {
-        Long emisorId = (Long) auth.getPrincipal();
+            Authentication auth) {
+        Long emisorId = ((UserPrincipal) auth.getPrincipal()).getId();
         Long receptorId = body.get("receptorId");
         return ResponseEntity.ok(toConversacionDTO(
                 chatUseCase.getOCrearConversacion(emisorId, receptorId)));

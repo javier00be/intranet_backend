@@ -4,9 +4,11 @@ import com.example.intranet_school.domain.model.Usuario;
 import com.example.intranet_school.domain.ports.out.UsuarioRepositoryPort;
 import com.example.intranet_school.domain.ports.out.PasswordEncryptorPort;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
@@ -21,7 +23,7 @@ public class DataInitializer implements CommandLineRunner {
             crearUsuario("profesor@escuela.com", "Juan", "Pérez", "PROFESOR", "profesor123");
             crearUsuario("padre@escuela.com", "Carlos", "López", "PADRE", "padre123");
             crearUsuario("estudiante@escuela.com", "María", "García", "ESTUDIANTE", "estudiante123");
-            System.out.println("=== USUARIOS DE PRUEBA CREADOS ===");
+            log.info("=== Usuarios de prueba creados ===");
         }
     }
 

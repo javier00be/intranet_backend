@@ -14,4 +14,7 @@ public interface MensualidadJpaRepository extends JpaRepository<MensualidadEntit
 
     @Query("SELECT m FROM MensualidadEntity m JOIN FETCH m.matricula ma JOIN FETCH ma.estudiante e JOIN FETCH e.usuario ORDER BY e.id, m.año, m.mes")
     List<MensualidadEntity> findAllWithDetails();
+
+    @Query("SELECT m FROM MensualidadEntity m JOIN FETCH m.matricula ma JOIN FETCH ma.estudiante e JOIN FETCH e.usuario WHERE e.id = :estudianteId ORDER BY m.año, m.mes")
+    List<MensualidadEntity> findByEstudianteId(@Param("estudianteId") Long estudianteId);
 }

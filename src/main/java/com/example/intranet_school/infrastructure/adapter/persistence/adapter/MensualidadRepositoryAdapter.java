@@ -33,6 +33,13 @@ public class MensualidadRepositoryAdapter implements MensualidadRepositoryPort {
     }
 
     @Override
+    public List<Mensualidad> findByEstudianteId(Long estudianteId) {
+        return mensualidadJpaRepository.findByEstudianteId(estudianteId).stream()
+                .map(mensualidadMapper::toDomain)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Optional<Mensualidad> findById(Long id) {
         return mensualidadJpaRepository.findById(id).map(mensualidadMapper::toDomain);
     }

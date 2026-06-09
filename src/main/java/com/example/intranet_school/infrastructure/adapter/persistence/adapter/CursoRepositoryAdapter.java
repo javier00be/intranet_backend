@@ -67,4 +67,9 @@ public class CursoRepositoryAdapter implements CursoRepositoryPort {
     public Optional<Curso> findById(Long id) {
         return cursoJpaRepository.findById(id).map(cursoMapper::toDomain);
     }
+
+    @Override
+    public long count() {
+        return cursoJpaRepository.countByActivoTrue();
+    }
 }

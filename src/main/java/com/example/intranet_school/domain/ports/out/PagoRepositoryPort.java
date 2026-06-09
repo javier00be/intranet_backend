@@ -10,4 +10,5 @@ public interface PagoRepositoryPort {
     List<Pago> findByEstado(Pago.Estado estado);
     Pago save(Pago pago);
     void deleteById(Long id);
+    long countByEstado(Pago.Estado estado);
 }

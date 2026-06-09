@@ -7,4 +7,5 @@ import java.util.List;
 public interface EstudianteJpaRepository extends JpaRepository<EstudianteEntity, Long> {
     List<EstudianteEntity> findByNivel(EstudianteEntity.NivelEducativo nivel);
     List<EstudianteEntity> findByGrado(Integer grado);
+    List<EstudianteEntity> findByNivelAndGrado(EstudianteEntity.NivelEducativo nivel, Integer grado);
 }
