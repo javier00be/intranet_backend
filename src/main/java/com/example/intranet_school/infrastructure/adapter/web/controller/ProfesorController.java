@@ -4,6 +4,7 @@ import com.example.intranet_school.application.dto.ProfesorDTO;
 import com.example.intranet_school.application.dto.UsuarioDTO;
 import com.example.intranet_school.domain.model.Profesor;
 import com.example.intranet_school.domain.model.Usuario;
+import com.example.intranet_school.domain.ports.in.CursoUseCase;
 import com.example.intranet_school.domain.ports.in.ProfesorUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProfesorController {
     private final ProfesorUseCase profesorUseCase;
+    private final CursoUseCase cursoUseCase;
 
     @GetMapping
     @PreAuthorize("hasAnyRole('DIRECTOR', 'PROFESOR', 'PADRE')")
@@ -61,6 +63,13 @@ public class ProfesorController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/{id}/cursos")
+    @PreAuthorize("hasRole('DIRECTOR')")
+    public ResponseEntity<Void> assignCursos(@PathVariable Long id, @RequestBody List<Long> cursoIds) {
+        cursoUseCase.syncCursosForProfesor(id, cursoIds);
+        return ResponseEntity.noContent().build();
+    }
+
     private ProfesorDTO toDTO(Profesor profesor) {
         UsuarioDTO usuarioDTO = null;
         if (profesor.getUsuario() != null) {
@@ -77,7 +86,6 @@ public class ProfesorController {
         return ProfesorDTO.builder()
                 .id(profesor.getId())
                 .usuario(usuarioDTO)
-                .especialidad(profesor.getEspecialidad())
                 .telefono(profesor.getTelefono())
                 .activo(profesor.isActivo())
                 .build();
@@ -86,8 +94,8 @@ public class ProfesorController {
     private Profesor toDomain(ProfesorDTO dto) {
         Profesor profesor = new Profesor();
         profesor.setId(dto.getId());
-        profesor.setEspecialidad(dto.getEspecialidad());
         profesor.setTelefono(dto.getTelefono());
+        profesor.setActivo(dto.getActivo() == null || dto.getActivo());
         if (dto.getUsuario() != null) {
             Usuario usuario = new Usuario();
             usuario.setId(dto.getUsuario().getId());

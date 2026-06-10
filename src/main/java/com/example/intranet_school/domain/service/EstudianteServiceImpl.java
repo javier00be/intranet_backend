@@ -23,7 +23,17 @@ public class EstudianteServiceImpl implements EstudianteUseCase {
     }
 
     @Override
+    public Optional<Estudiante> getByUsuarioEmail(String email) {
+        return estudianteRepositoryPort.findByUsuarioEmail(email);
+    }
+
+    @Override
     public List<Estudiante> getByNivelAndGrado(Estudiante.NivelEducativo nivel, Integer grado) {
         return estudianteRepositoryPort.findByNivelAndGrado(nivel, grado);
+    }
+
+    @Override
+    public List<Estudiante> getByNivelGradoAndSeccion(Estudiante.NivelEducativo nivel, Integer grado, String seccion) {
+        return estudianteRepositoryPort.findByNivelAndGradoAndSeccion(nivel, grado, seccion);
     }
 }

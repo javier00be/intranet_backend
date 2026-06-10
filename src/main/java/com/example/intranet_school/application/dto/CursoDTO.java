@@ -22,9 +22,11 @@ public class CursoDTO {
     @Builder.Default
     private List<Integer> grados = new ArrayList<>();
     private String seccion;
-    private Long profesorId;
-    private String profesorNombre;
+    @Builder.Default
+    private List<Long> profesorIds = new ArrayList<>();
+    @Builder.Default
+    private List<String> profesorNombres = new ArrayList<>();
     @JsonProperty("anio")
     private Integer año;
-    private boolean activo = true;
+    private Boolean activo;
 }

@@ -73,4 +73,9 @@ public class DomainConfig {
     public AsistenciaUseCase asistenciaUseCase(AsistenciaRepositoryPort asistenciaRepositoryPort) {
         return new AsistenciaServiceImpl(asistenciaRepositoryPort);
     }
+
+    @Bean
+    public TareaUseCase tareaUseCase(TareaRepositoryPort tareaRepositoryPort) {
+        return new TareaServiceImpl(tareaRepositoryPort);
+    }
 }

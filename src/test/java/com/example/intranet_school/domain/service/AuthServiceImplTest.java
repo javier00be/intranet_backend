@@ -9,6 +9,7 @@ import com.example.intranet_school.domain.ports.out.PasswordEncryptorPort;
 import com.example.intranet_school.domain.ports.out.UsuarioRepositoryPort;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -26,6 +27,13 @@ class AuthServiceImplTest {
     @Mock JwtPort jwtPort;
     @Mock PasswordEncryptorPort passwordEncryptorPort;
     @InjectMocks AuthServiceImpl authService;
+
+    // --- util temporal ---
+
+    @Test
+    void generarHash() {
+        System.out.println(new BCryptPasswordEncoder().encode("password"));
+    }
 
     // --- login ---
 

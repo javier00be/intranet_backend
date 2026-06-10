@@ -17,7 +17,8 @@ public class Curso {
     @Builder.Default
     private List<Integer> grados = new ArrayList<>();
     private String seccion;
-    private Profesor profesor;
+    @Builder.Default
+    private List<Profesor> profesores = new ArrayList<>();
     private Integer año;
     private boolean activo = true;
 }

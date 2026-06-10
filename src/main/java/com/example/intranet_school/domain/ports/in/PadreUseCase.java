@@ -14,4 +14,5 @@ public interface PadreUseCase {
     Padre addHijo(Long padreId, Long estudianteId);
     Padre removeHijo(Long padreId, Long estudianteId);
     Optional<Padre> getPadreByUsuarioId(Long usuarioId);
+    Optional<Padre> getPadreByEmail(String email);
 }

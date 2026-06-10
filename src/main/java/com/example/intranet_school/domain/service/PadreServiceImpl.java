@@ -69,6 +69,11 @@ public class PadreServiceImpl implements PadreUseCase {
     }
 
     @Override
+    public Optional<Padre> getPadreByEmail(String email) {
+        return padreRepositoryPort.findByUsuarioEmail(email);
+    }
+
+    @Override
     public Padre removeHijo(Long padreId, Long estudianteId) {
         Padre padre = padreRepositoryPort.findById(padreId)
                 .orElseThrow(() -> new RuntimeException("Padre no encontrado: " + padreId));

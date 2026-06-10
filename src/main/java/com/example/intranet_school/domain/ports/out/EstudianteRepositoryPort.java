@@ -10,8 +10,10 @@ public interface EstudianteRepositoryPort {
     List<Estudiante> findByNivel(Estudiante.NivelEducativo nivel);
     List<Estudiante> findByGrado(Integer grado);
     List<Estudiante> findByNivelAndGrado(Estudiante.NivelEducativo nivel, Integer grado);
+    List<Estudiante> findByNivelAndGradoAndSeccion(Estudiante.NivelEducativo nivel, Integer grado, String seccion);
     Estudiante save(Estudiante estudiante);
     void deleteById(Long id);
     Optional<Estudiante> findById(Long id);
+    Optional<Estudiante> findByUsuarioEmail(String email);
     long count();
 }

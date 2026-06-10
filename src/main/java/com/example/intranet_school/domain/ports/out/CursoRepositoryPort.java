@@ -8,6 +8,7 @@ public interface CursoRepositoryPort {
     List<Curso> findAll();
     List<Curso> findByProfesorId(Long profesorId);
     List<Curso> findByNivelAndGrado(Estudiante.NivelEducativo nivel, Integer grado);
+    void syncCursosForProfesor(Long profesorId, List<Long> cursoIds);
     Curso save(Curso curso);
     void deleteById(Long id);
     void reactivateById(Long id);

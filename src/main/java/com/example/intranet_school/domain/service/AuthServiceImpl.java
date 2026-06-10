@@ -52,6 +52,14 @@ public class AuthServiceImpl implements AuthUseCase {
         return AuthResponse.builder().success(true).token(token).user(userDTO).build();
     }
 
+    @Override
+    public void updatePassword(String email, String newPassword) {
+        Usuario usuario = usuarioRepositoryPort.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado: " + email));
+        usuario.setPassword(passwordEncryptorPort.encode(newPassword));
+        usuarioRepositoryPort.save(usuario);
+    }
+
     private UsuarioDTO toUsuarioDTO(Usuario usuario) {
         return UsuarioDTO.builder()
                 .id(usuario.getId())

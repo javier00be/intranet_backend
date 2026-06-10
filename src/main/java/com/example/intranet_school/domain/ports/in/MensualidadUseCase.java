@@ -9,4 +9,6 @@ public interface MensualidadUseCase {
     List<Mensualidad> getByMatricula(Long matriculaId);
     List<Mensualidad> getByEstudiante(Long estudianteId);
     Mensualidad pagarMensualidad(Long id);
+    Mensualidad subirComprobante(Long id, String nroTransaccion, String url);
+    Mensualidad validarPago(Long id);
 }

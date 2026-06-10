@@ -21,4 +21,6 @@ public class MensualidadDTO {
     private String estadoPago;
     private LocalDate fechaVencimiento;
     private LocalDateTime fechaPago;
+    private String comprobanteUrl;
+    private String nroTransaccion;
 }

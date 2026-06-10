@@ -7,6 +7,7 @@ import com.example.intranet_school.domain.ports.in.EstudianteUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -23,15 +24,28 @@ public class EstudianteController {
     @PreAuthorize("hasAnyRole('DIRECTOR', 'PADRE', 'PROFESOR')")
     public ResponseEntity<List<EstudianteDTO>> getAllEstudiantes(
             @RequestParam(required = false) String nivel,
-            @RequestParam(required = false) Integer grado) {
+            @RequestParam(required = false) Integer grado,
+            @RequestParam(required = false) String seccion) {
         List<Estudiante> result;
-        if (nivel != null && grado != null) {
+        if (nivel != null && grado != null && seccion != null) {
+            result = estudianteUseCase.getByNivelGradoAndSeccion(
+                    Estudiante.NivelEducativo.valueOf(nivel.toUpperCase()), grado, seccion);
+        } else if (nivel != null && grado != null) {
             result = estudianteUseCase.getByNivelAndGrado(
                     Estudiante.NivelEducativo.valueOf(nivel.toUpperCase()), grado);
         } else {
             result = estudianteUseCase.getAllEstudiantes();
         }
         return ResponseEntity.ok(result.stream().map(this::toDTO).collect(Collectors.toList()));
+    }
+
+    @GetMapping("/me")
+    @PreAuthorize("hasRole('ESTUDIANTE')")
+    public ResponseEntity<EstudianteDTO> getMyProfile(Authentication auth) {
+        return estudianteUseCase.getByUsuarioEmail(auth.getName())
+                .map(this::toDTO)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/{id}")

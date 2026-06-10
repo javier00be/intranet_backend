@@ -6,6 +6,7 @@ import com.example.intranet_school.infrastructure.adapter.persistence.mapper.Pro
 import com.example.intranet_school.infrastructure.adapter.persistence.repository.ProfesorJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,7 @@ public class ProfesorRepositoryAdapter implements ProfesorRepositoryPort {
     private final ProfesorMapper profesorMapper;
 
     @Override
+    @Transactional(readOnly = true)
     public List<Profesor> findAll() {
         return profesorJpaRepository.findAll().stream()
                 .map(profesorMapper::toDomain)
@@ -46,11 +48,13 @@ public class ProfesorRepositoryAdapter implements ProfesorRepositoryPort {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Profesor> findById(Long id) {
         return profesorJpaRepository.findById(id).map(profesorMapper::toDomain);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Profesor> findByUsuarioEmail(String email) {
         return profesorJpaRepository.findByUsuarioEmail(email).map(profesorMapper::toDomain);
     }

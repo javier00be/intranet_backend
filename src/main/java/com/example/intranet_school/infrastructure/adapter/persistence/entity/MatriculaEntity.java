@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "matriculas", uniqueConstraints = {
-    @UniqueConstraint(name = "uk_matricula_estudiante_anio", columnNames = {"estudiante_id", "año"})
+    @UniqueConstraint(name = "uk_matricula_estudiante_anio", columnNames = {"estudiante_id", "anio"})
 })
 @Data
 @NoArgsConstructor
@@ -21,6 +21,7 @@ public class MatriculaEntity {
     @JoinColumn(name = "estudiante_id", nullable = false)
     private EstudianteEntity estudiante;
 
+    @Column(name = "anio")
     private Integer año;
     private Integer grado;
 

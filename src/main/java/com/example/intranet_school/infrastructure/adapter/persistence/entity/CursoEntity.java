@@ -28,8 +28,14 @@ public class CursoEntity {
     private String seccion;
     @Builder.Default
     private boolean activo = true;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "profesor_id")
-    private ProfesorEntity profesor;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "curso_profesores",
+        joinColumns = @JoinColumn(name = "curso_id"),
+        inverseJoinColumns = @JoinColumn(name = "profesor_id")
+    )
+    @Builder.Default
+    private List<ProfesorEntity> profesores = new ArrayList<>();
+    @Column(name = "anio")
     private Integer año;
 }

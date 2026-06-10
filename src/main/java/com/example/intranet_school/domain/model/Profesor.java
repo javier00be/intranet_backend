@@ -9,7 +9,6 @@ import lombok.*;
 public class Profesor {
     private Long id;
     private Usuario usuario;
-    private String especialidad;
     private String telefono;
     private boolean activo = true;
 }

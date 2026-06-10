@@ -8,4 +8,6 @@ public interface EstudianteJpaRepository extends JpaRepository<EstudianteEntity,
     List<EstudianteEntity> findByNivel(EstudianteEntity.NivelEducativo nivel);
     List<EstudianteEntity> findByGrado(Integer grado);
     List<EstudianteEntity> findByNivelAndGrado(EstudianteEntity.NivelEducativo nivel, Integer grado);
+    List<EstudianteEntity> findByNivelAndGradoAndSeccion(EstudianteEntity.NivelEducativo nivel, Integer grado, String seccion);
+    java.util.Optional<EstudianteEntity> findByUsuarioEmail(String email);
 }

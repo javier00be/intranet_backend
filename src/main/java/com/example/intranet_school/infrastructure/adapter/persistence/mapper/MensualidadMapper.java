@@ -20,6 +20,8 @@ public class MensualidadMapper {
         m.setMonto(entity.getMonto());
         m.setFechaVencimiento(entity.getFechaVencimiento());
         m.setFechaPago(entity.getFechaPago());
+        m.setComprobanteUrl(entity.getComprobanteUrl());
+        m.setNroTransaccion(entity.getNroTransaccion());
 
         if (entity.getMes() != null) {
             m.setMes(Mensualidad.Mes.valueOf(entity.getMes().name()));
@@ -65,6 +67,8 @@ public class MensualidadMapper {
         e.setMonto(domain.getMonto());
         e.setFechaVencimiento(domain.getFechaVencimiento());
         e.setFechaPago(domain.getFechaPago());
+        e.setComprobanteUrl(domain.getComprobanteUrl());
+        e.setNroTransaccion(domain.getNroTransaccion());
 
         if (domain.getMes() != null) {
             e.setMes(MensualidadEntity.Mes.valueOf(domain.getMes().name()));

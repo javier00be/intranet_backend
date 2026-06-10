@@ -3,10 +3,14 @@ package com.example.intranet_school.infrastructure.adapter.web.controller;
 import com.example.intranet_school.application.dto.MensualidadDTO;
 import com.example.intranet_school.domain.model.Mensualidad;
 import com.example.intranet_school.domain.ports.in.MensualidadUseCase;
+import com.example.intranet_school.domain.ports.in.PadreUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,6 +21,7 @@ import java.util.stream.Collectors;
 public class MensualidadController {
 
     private final MensualidadUseCase mensualidadUseCase;
+    private final PadreUseCase padreUseCase;
 
     @GetMapping
     @PreAuthorize("hasRole('DIRECTOR')")
@@ -53,6 +58,43 @@ public class MensualidadController {
         }
     }
 
+    @PatchMapping("/{id}/comprobante")
+    @PreAuthorize("hasRole('PADRE')")
+    public ResponseEntity<?> subirComprobante(@PathVariable Long id,
+                                              @RequestBody Map<String, String> body,
+                                              Authentication auth) {
+        String nroTransaccion = body.get("nroTransaccion");
+        String url = body.get("url");
+        if ((nroTransaccion == null || nroTransaccion.isBlank()) && (url == null || url.isBlank())) {
+            return ResponseEntity.badRequest().body("Se requiere número de transacción o URL del comprobante");
+        }
+        return padreUseCase.getPadreByEmail(auth.getName())
+                .map(padre -> {
+                    boolean esHijo = padre.getHijos() != null && padre.getHijos().stream()
+                            .anyMatch(h -> mensualidadUseCase.getByEstudiante(h.getId()).stream()
+                                    .anyMatch(m -> m.getId().equals(id)));
+                    if (!esHijo) return ResponseEntity.status(403).<Object>build();
+                    try {
+                        return ResponseEntity.ok(toDTO(mensualidadUseCase.subirComprobante(id, nroTransaccion, url)));
+                    } catch (IllegalStateException e) {
+                        return ResponseEntity.badRequest().<Object>body(e.getMessage());
+                    }
+                })
+                .orElse(ResponseEntity.status(403).build());
+    }
+
+    @PatchMapping("/{id}/validar")
+    @PreAuthorize("hasRole('DIRECTOR')")
+    public ResponseEntity<?> validarPago(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(toDTO(mensualidadUseCase.validarPago(id)));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     private MensualidadDTO toDTO(Mensualidad m) {
         MensualidadDTO dto = new MensualidadDTO();
         dto.setId(m.getId());
@@ -62,6 +104,8 @@ public class MensualidadController {
         dto.setEstadoPago(m.getEstadoPago() != null ? m.getEstadoPago().name() : null);
         dto.setFechaVencimiento(m.getFechaVencimiento());
         dto.setFechaPago(m.getFechaPago());
+        dto.setComprobanteUrl(m.getComprobanteUrl());
+        dto.setNroTransaccion(m.getNroTransaccion());
 
         if (m.getMatricula() != null) {
             dto.setMatriculaId(m.getMatricula().getId());

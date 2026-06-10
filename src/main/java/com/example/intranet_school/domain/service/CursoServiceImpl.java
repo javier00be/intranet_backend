@@ -66,4 +66,9 @@ public class CursoServiceImpl implements CursoUseCase {
     public void reactivateCurso(Long id) {
         cursoRepositoryPort.reactivateById(id);
     }
+
+    @Override
+    public void syncCursosForProfesor(Long profesorId, List<Long> cursoIds) {
+        cursoRepositoryPort.syncCursosForProfesor(profesorId, cursoIds);
+    }
 }

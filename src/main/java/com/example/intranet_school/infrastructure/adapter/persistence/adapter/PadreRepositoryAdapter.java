@@ -34,6 +34,11 @@ public class PadreRepositoryAdapter implements PadreRepositoryPort {
     }
 
     @Override
+    public Optional<Padre> findByUsuarioEmail(String email) {
+        return padreJpaRepository.findByUsuarioEmailAndActivoTrue(email).map(padreMapper::toDomain);
+    }
+
+    @Override
     public List<Padre> findByHijoId(Long estudianteId) {
         return padreJpaRepository.findByHijoId(estudianteId).stream()
                 .map(padreMapper::toDomain).collect(Collectors.toList());

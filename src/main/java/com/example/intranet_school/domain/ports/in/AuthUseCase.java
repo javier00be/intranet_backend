@@ -7,4 +7,5 @@ import com.example.intranet_school.application.dto.RegisterRequest;
 public interface AuthUseCase {
     AuthResponse login(LoginRequest request);
     AuthResponse register(RegisterRequest request);
+    void updatePassword(String email, String newPassword);
 }

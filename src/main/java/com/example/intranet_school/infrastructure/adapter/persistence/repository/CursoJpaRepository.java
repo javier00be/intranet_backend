@@ -7,7 +7,8 @@ import java.util.List;
 
 public interface CursoJpaRepository extends JpaRepository<CursoEntity, Long> {
     List<CursoEntity> findAllByActivoTrue();
-    List<CursoEntity> findByProfesorIdAndActivoTrue(Long profesorId);
+    List<CursoEntity> findByProfesoresIdAndActivoTrue(Long profesorId);
+    List<CursoEntity> findByProfesoresId(Long profesorId);
     List<CursoEntity> findByNivelAndActivoTrue(EstudianteEntity.NivelEducativo nivel);
     List<CursoEntity> findByAñoAndActivoTrue(Integer año);
     long countByActivoTrue();

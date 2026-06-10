@@ -5,9 +5,11 @@ import com.example.intranet_school.domain.model.Asistencia;
 import com.example.intranet_school.domain.model.Curso;
 import com.example.intranet_school.domain.model.Estudiante;
 import com.example.intranet_school.domain.ports.in.AsistenciaUseCase;
+import com.example.intranet_school.domain.ports.in.EstudianteUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AsistenciaController {
     private final AsistenciaUseCase asistenciaUseCase;
+    private final EstudianteUseCase estudianteUseCase;
 
     @PostMapping("/batch")
     @PreAuthorize("hasRole('PROFESOR')")
@@ -31,6 +34,16 @@ public class AsistenciaController {
                 .build()).collect(Collectors.toList());
         return ResponseEntity.ok(asistenciaUseCase.saveAll(asistencias).stream()
                 .map(this::toDTO).collect(Collectors.toList()));
+    }
+
+    @GetMapping("/mi-asistencia")
+    @PreAuthorize("hasRole('ESTUDIANTE')")
+    public ResponseEntity<List<AsistenciaDTO>> getMiAsistencia(Authentication auth) {
+        return estudianteUseCase.getByUsuarioEmail(auth.getName())
+                .map(e -> ResponseEntity.ok(
+                        asistenciaUseCase.getByEstudianteId(e.getId()).stream()
+                                .map(this::toDTO).collect(Collectors.toList())))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping

@@ -18,7 +18,6 @@ public class ProfesorEntity {
     @JoinColumn(name = "usuario_id", nullable = false, unique = true)
     private UsuarioEntity usuario;
 
-    private String especialidad;
     private String telefono;
     @Builder.Default
     private boolean activo = true;

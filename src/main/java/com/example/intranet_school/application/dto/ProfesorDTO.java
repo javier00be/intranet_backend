@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 public class ProfesorDTO {
     private Long id;
     private UsuarioDTO usuario;
-    private String especialidad;
     private String telefono;
-    private boolean activo = true;
+    private Boolean activo;
 }

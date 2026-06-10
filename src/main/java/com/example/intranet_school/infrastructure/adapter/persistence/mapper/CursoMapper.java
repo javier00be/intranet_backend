@@ -3,15 +3,24 @@ package com.example.intranet_school.infrastructure.adapter.persistence.mapper;
 import com.example.intranet_school.domain.model.Curso;
 import com.example.intranet_school.domain.model.Estudiante;
 import com.example.intranet_school.domain.model.Profesor;
+import com.example.intranet_school.domain.model.Usuario;
 import com.example.intranet_school.infrastructure.adapter.persistence.entity.CursoEntity;
 import com.example.intranet_school.infrastructure.adapter.persistence.entity.EstudianteEntity;
 import com.example.intranet_school.infrastructure.adapter.persistence.entity.ProfesorEntity;
+import com.example.intranet_school.infrastructure.adapter.persistence.repository.ProfesorJpaRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class CursoMapper {
+
+    private final ProfesorJpaRepository profesorJpaRepository;
 
     public Curso toDomain(CursoEntity entity) {
         if (entity == null) return null;
@@ -26,11 +35,22 @@ public class CursoMapper {
         if (entity.getNivel() != null) {
             domain.setNivel(Estudiante.NivelEducativo.valueOf(entity.getNivel().name()));
         }
-        if (entity.getProfesor() != null) {
-            Profesor profesor = new Profesor();
-            profesor.setId(entity.getProfesor().getId());
-            domain.setProfesor(profesor);
+        List<Profesor> profesores = new ArrayList<>();
+        if (entity.getProfesores() != null) {
+            for (ProfesorEntity pe : entity.getProfesores()) {
+                Profesor profesor = new Profesor();
+                profesor.setId(pe.getId());
+                if (pe.getUsuario() != null) {
+                    Usuario usuario = new Usuario();
+                    usuario.setId(pe.getUsuario().getId());
+                    usuario.setNombre(pe.getUsuario().getNombre());
+                    usuario.setApellido(pe.getUsuario().getApellido());
+                    profesor.setUsuario(usuario);
+                }
+                profesores.add(profesor);
+            }
         }
+        domain.setProfesores(profesores);
         return domain;
     }
 
@@ -47,8 +67,14 @@ public class CursoMapper {
         if (domain.getNivel() != null) {
             entity.setNivel(EstudianteEntity.NivelEducativo.valueOf(domain.getNivel().name()));
         }
-        if (domain.getProfesor() != null && domain.getProfesor().getId() != null) {
-            entity.setProfesor(ProfesorEntity.builder().id(domain.getProfesor().getId()).build());
+        if (domain.getProfesores() != null && !domain.getProfesores().isEmpty()) {
+            List<Long> ids = domain.getProfesores().stream()
+                    .map(Profesor::getId)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+            if (!ids.isEmpty()) {
+                entity.setProfesores(new ArrayList<>(profesorJpaRepository.findAllById(ids)));
+            }
         }
         return entity;
     }

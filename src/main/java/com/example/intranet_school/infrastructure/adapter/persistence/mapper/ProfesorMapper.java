@@ -14,7 +14,6 @@ public class ProfesorMapper {
         if (entity == null) return null;
         Profesor domain = new Profesor();
         domain.setId(entity.getId());
-        domain.setEspecialidad(entity.getEspecialidad());
         domain.setTelefono(entity.getTelefono());
         domain.setUsuario(usuarioMapper.toDomain(entity.getUsuario()));
         domain.setActivo(entity.isActivo());
@@ -25,7 +24,6 @@ public class ProfesorMapper {
         if (domain == null) return null;
         ProfesorEntity entity = new ProfesorEntity();
         entity.setId(domain.getId());
-        entity.setEspecialidad(domain.getEspecialidad());
         entity.setTelefono(domain.getTelefono());
         entity.setUsuario(usuarioMapper.toEntity(domain.getUsuario()));
         entity.setActivo(domain.isActivo());

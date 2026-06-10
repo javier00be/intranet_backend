@@ -51,6 +51,14 @@ public class EstudianteRepositoryAdapter implements EstudianteRepositoryPort {
     }
 
     @Override
+    public List<Estudiante> findByNivelAndGradoAndSeccion(Estudiante.NivelEducativo nivel, Integer grado, String seccion) {
+        return estudianteJpaRepository.findByNivelAndGradoAndSeccion(
+                EstudianteEntity.NivelEducativo.valueOf(nivel.name()), grado, seccion).stream()
+                .map(this::mapToDomain)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     @Transactional
     public Estudiante save(Estudiante estudiante) {
         return mapToDomain(estudianteJpaRepository.save(mapToEntity(estudiante)));
@@ -65,6 +73,11 @@ public class EstudianteRepositoryAdapter implements EstudianteRepositoryPort {
     @Override
     public Optional<Estudiante> findById(Long id) {
         return estudianteJpaRepository.findById(id).map(this::mapToDomain);
+    }
+
+    @Override
+    public Optional<Estudiante> findByUsuarioEmail(String email) {
+        return estudianteJpaRepository.findByUsuarioEmail(email).map(this::mapToDomain);
     }
 
     @Override

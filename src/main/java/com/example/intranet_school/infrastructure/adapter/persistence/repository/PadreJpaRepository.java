@@ -10,6 +10,7 @@ import java.util.Optional;
 public interface PadreJpaRepository extends JpaRepository<PadreEntity, Long> {
     List<PadreEntity> findAllByActivoTrue();
     Optional<PadreEntity> findByUsuarioIdAndActivoTrue(Long usuarioId);
+    Optional<PadreEntity> findByUsuarioEmailAndActivoTrue(String email);
 
     @Query("SELECT p FROM PadreEntity p JOIN p.hijos h WHERE h.id = :estudianteId AND p.activo = true")
     List<PadreEntity> findByHijoId(@Param("estudianteId") Long estudianteId);

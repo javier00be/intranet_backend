@@ -17,6 +17,8 @@ public class Mensualidad {
     private EstadoPago estadoPago;
     private LocalDate fechaVencimiento;
     private LocalDateTime fechaPago;
+    private String comprobanteUrl;
+    private String nroTransaccion;
 
     public enum Mes {
         ENERO, FEBRERO, MARZO, ABRIL, MAYO, JUNIO,
@@ -27,5 +29,5 @@ public class Mensualidad {
         }
     }
 
-    public enum EstadoPago { PENDIENTE, PAGADO }
+    public enum EstadoPago { PENDIENTE, EN_REVISION, PAGADO }
 }

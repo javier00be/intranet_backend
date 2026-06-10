@@ -25,7 +25,7 @@ public class MensualidadEntity {
     @Column(nullable = false)
     private Mes mes;
 
-    @Column(nullable = false)
+    @Column(name = "anio", nullable = false)
     private Integer año;
 
     @Column(nullable = false)
@@ -41,10 +41,16 @@ public class MensualidadEntity {
     @Column(name = "fecha_pago")
     private LocalDateTime fechaPago;
 
+    @Column(name = "comprobante_url")
+    private String comprobanteUrl;
+
+    @Column(name = "nro_transaccion")
+    private String nroTransaccion;
+
     public enum Mes {
         ENERO, FEBRERO, MARZO, ABRIL, MAYO, JUNIO,
         JULIO, AGOSTO, SEPTIEMBRE, OCTUBRE, NOVIEMBRE, DICIEMBRE
     }
 
-    public enum EstadoPago { PENDIENTE, PAGADO }
+    public enum EstadoPago { PENDIENTE, EN_REVISION, PAGADO }
 }

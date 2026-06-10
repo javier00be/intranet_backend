@@ -4,6 +4,8 @@ import com.example.intranet_school.application.dto.DashboardDTO;
 import com.example.intranet_school.domain.ports.in.DashboardUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,9 +15,14 @@ public class DashboardController {
     private final DashboardUseCase dashboardUseCase;
 
     @GetMapping
-    public ResponseEntity<DashboardDTO> getDashboard(
-            @RequestParam String role,
-            @RequestParam Long userId) {
-        return ResponseEntity.ok(dashboardUseCase.getDashboardData(role, userId));
+    @PreAuthorize("hasAnyRole('DIRECTOR', 'PROFESOR', 'ESTUDIANTE', 'PADRE')")
+    public ResponseEntity<DashboardDTO> getDashboard(Authentication auth) {
+        String email = auth.getName();
+        String role  = auth.getAuthorities().stream()
+                .findFirst()
+                .map(a -> a.getAuthority().replace("ROLE_", ""))
+                .orElse("");
+        return ResponseEntity.ok(dashboardUseCase.getDashboardData(email, role));
     }
 }
+

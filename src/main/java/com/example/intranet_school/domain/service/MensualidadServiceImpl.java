@@ -41,4 +41,29 @@ public class MensualidadServiceImpl implements MensualidadUseCase {
         mensualidad.setFechaPago(LocalDateTime.now());
         return mensualidadRepositoryPort.save(mensualidad);
     }
+
+    @Override
+    public Mensualidad subirComprobante(Long id, String nroTransaccion, String url) {
+        Mensualidad mensualidad = mensualidadRepositoryPort.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Mensualidad no encontrada: " + id));
+        if (mensualidad.getEstadoPago() == Mensualidad.EstadoPago.PAGADO) {
+            throw new IllegalStateException("La mensualidad ya fue pagada");
+        }
+        mensualidad.setNroTransaccion(nroTransaccion);
+        mensualidad.setComprobanteUrl(url);
+        mensualidad.setEstadoPago(Mensualidad.EstadoPago.EN_REVISION);
+        return mensualidadRepositoryPort.save(mensualidad);
+    }
+
+    @Override
+    public Mensualidad validarPago(Long id) {
+        Mensualidad mensualidad = mensualidadRepositoryPort.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Mensualidad no encontrada: " + id));
+        if (mensualidad.getEstadoPago() != Mensualidad.EstadoPago.EN_REVISION) {
+            throw new IllegalStateException("Solo se pueden validar mensualidades EN_REVISION");
+        }
+        mensualidad.setEstadoPago(Mensualidad.EstadoPago.PAGADO);
+        mensualidad.setFechaPago(LocalDateTime.now());
+        return mensualidadRepositoryPort.save(mensualidad);
+    }
 }

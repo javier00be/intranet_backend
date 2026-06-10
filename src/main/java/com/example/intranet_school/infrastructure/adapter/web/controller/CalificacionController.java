@@ -6,6 +6,7 @@ import com.example.intranet_school.domain.model.Curso;
 import com.example.intranet_school.domain.model.Estudiante;
 import com.example.intranet_school.domain.model.Profesor;
 import com.example.intranet_school.domain.ports.in.CalificacionUseCase;
+import com.example.intranet_school.domain.ports.in.EstudianteUseCase;
 import com.example.intranet_school.domain.ports.in.ProfesorUseCase;
 import com.example.intranet_school.infrastructure.adapter.persistence.mapper.CalificacionMapper;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 public class CalificacionController {
     private final CalificacionUseCase calificacionUseCase;
     private final ProfesorUseCase profesorUseCase;
+    private final EstudianteUseCase estudianteUseCase;
     private final CalificacionMapper calificacionMapper;
 
     @PostMapping
@@ -42,6 +44,16 @@ public class CalificacionController {
                 .observaciones(dto.getObservaciones())
                 .build();
         return ResponseEntity.ok(calificacionMapper.toDTO(calificacionUseCase.save(calificacion)));
+    }
+
+    @GetMapping("/mis-notas")
+    @PreAuthorize("hasRole('ESTUDIANTE')")
+    public ResponseEntity<List<CalificacionDTO>> getMisNotas(Authentication auth) {
+        return estudianteUseCase.getByUsuarioEmail(auth.getName())
+                .map(e -> ResponseEntity.ok(
+                        calificacionUseCase.getByEstudianteId(e.getId()).stream()
+                                .map(calificacionMapper::toDTO).collect(Collectors.toList())))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping

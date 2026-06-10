@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -87,12 +88,17 @@ public class CursoController {
         dto.setSeccion(curso.getSeccion());
         dto.setAño(curso.getAño());
         dto.setActivo(curso.isActivo());
-        if (curso.getProfesor() != null) {
-            dto.setProfesorId(curso.getProfesor().getId());
-            if (curso.getProfesor().getUsuario() != null) {
-                dto.setProfesorNombre(curso.getProfesor().getUsuario().getNombre()
-                        + " " + curso.getProfesor().getUsuario().getApellido());
+        if (curso.getProfesores() != null) {
+            List<Long> ids = new ArrayList<>();
+            List<String> nombres = new ArrayList<>();
+            for (Profesor p : curso.getProfesores()) {
+                ids.add(p.getId());
+                if (p.getUsuario() != null) {
+                    nombres.add(p.getUsuario().getNombre() + " " + p.getUsuario().getApellido());
+                }
             }
+            dto.setProfesorIds(ids);
+            dto.setProfesorNombres(nombres);
         }
         return dto;
     }
@@ -106,10 +112,12 @@ public class CursoController {
         curso.setGrados(dto.getGrados());
         curso.setSeccion(dto.getSeccion());
         curso.setAño(dto.getAño());
-        if (dto.getProfesorId() != null) {
-            Profesor profesor = new Profesor();
-            profesor.setId(dto.getProfesorId());
-            curso.setProfesor(profesor);
+        curso.setActivo(dto.getActivo() == null || dto.getActivo());
+        if (dto.getProfesorIds() != null && !dto.getProfesorIds().isEmpty()) {
+            List<Profesor> profesores = dto.getProfesorIds().stream()
+                    .map(id -> { Profesor p = new Profesor(); p.setId(id); return p; })
+                    .collect(Collectors.toList());
+            curso.setProfesores(profesores);
         }
         return curso;
     }

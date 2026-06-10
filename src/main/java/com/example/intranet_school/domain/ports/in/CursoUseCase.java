@@ -15,4 +15,5 @@ public interface CursoUseCase {
     Curso updateCurso(Long id, Curso curso);
     void deleteCurso(Long id);
     void reactivateCurso(Long id);
+    void syncCursosForProfesor(Long profesorId, List<Long> cursoIds);
 }
