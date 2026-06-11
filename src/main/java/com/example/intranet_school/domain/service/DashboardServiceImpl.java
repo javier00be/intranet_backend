@@ -7,7 +7,9 @@ import com.example.intranet_school.domain.ports.in.DashboardUseCase;
 import com.example.intranet_school.domain.ports.out.*;
 import lombok.RequiredArgsConstructor;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RequiredArgsConstructor
 public class DashboardServiceImpl implements DashboardUseCase {
@@ -15,6 +17,8 @@ public class DashboardServiceImpl implements DashboardUseCase {
     private final ProfesorRepositoryPort profesorRepositoryPort;
     private final CursoRepositoryPort cursoRepositoryPort;
     private final PagoRepositoryPort pagoRepositoryPort;
+    private final TareaRepositoryPort tareaRepositoryPort;
+    private final CalificacionRepositoryPort calificacionRepositoryPort;
 
     @Override
     public DashboardDTO getDashboardData(String email, String role) {
@@ -23,7 +27,7 @@ public class DashboardServiceImpl implements DashboardUseCase {
             case "PROFESOR"   -> profesorRepositoryPort.findByUsuarioEmail(email)
                                     .map(p -> buildProfesorDashboard(p.getId()))
                                     .orElse(DashboardDTO.builder().build());
-            case "ESTUDIANTE" -> buildEstudianteDashboard();
+            case "ESTUDIANTE" -> buildEstudianteDashboard(email);
             default           -> DashboardDTO.builder().build();
         };
     }
@@ -39,18 +43,47 @@ public class DashboardServiceImpl implements DashboardUseCase {
 
     private DashboardDTO buildProfesorDashboard(Long profesorId) {
         List<Curso> cursos = cursoRepositoryPort.findByProfesorId(profesorId);
+
+        long tareas = cursos.stream()
+                .mapToLong(c -> tareaRepositoryPort.findByCursoId(c.getId()).size())
+                .sum();
+
+        Set<Long> alumnosUnicos = new HashSet<>();
+        cursos.forEach(curso -> {
+            if (curso.getNivel() != null) {
+                curso.getGrados().forEach(grado ->
+                        estudianteRepositoryPort.findByNivelAndGrado(curso.getNivel(), grado)
+                                .forEach(e -> alumnosUnicos.add(e.getId()))
+                );
+            }
+        });
+
         return DashboardDTO.builder()
                 .misCursos((long) cursos.size())
-                .misTareas(0L)
-                .misAlumnos(0L)
+                .misTareas(tareas)
+                .misAlumnos((long) alumnosUnicos.size())
                 .build();
     }
 
-    private DashboardDTO buildEstudianteDashboard() {
-        return DashboardDTO.builder()
-                .misCursos(0L)
-                .misTareas(0L)
-                .misNotas(0L)
-                .build();
+    private DashboardDTO buildEstudianteDashboard(String email) {
+        return estudianteRepositoryPort.findByUsuarioEmail(email)
+                .map(estudiante -> {
+                    List<Curso> cursos = (estudiante.getNivel() != null && estudiante.getGrado() != null)
+                            ? cursoRepositoryPort.findByNivelAndGrado(estudiante.getNivel(), estudiante.getGrado())
+                            : List.of();
+
+                    long tareas = cursos.stream()
+                            .mapToLong(c -> tareaRepositoryPort.findByCursoId(c.getId()).size())
+                            .sum();
+
+                    long notas = calificacionRepositoryPort.findByEstudianteId(estudiante.getId()).size();
+
+                    return DashboardDTO.builder()
+                            .misCursos((long) cursos.size())
+                            .misTareas(tareas)
+                            .misNotas(notas)
+                            .build();
+                })
+                .orElse(DashboardDTO.builder().misCursos(0L).misTareas(0L).misNotas(0L).build());
     }
 }

@@ -3,6 +3,8 @@ package com.example.intranet_school.infrastructure.config;
 import com.example.intranet_school.domain.ports.in.*;
 import com.example.intranet_school.domain.ports.out.*;
 import com.example.intranet_school.domain.service.*;
+import com.example.intranet_school.domain.service.EventoCalendarioServiceImpl;
+import com.example.intranet_school.domain.service.ReportesServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -37,9 +39,11 @@ public class DomainConfig {
     public DashboardUseCase dashboardUseCase(EstudianteRepositoryPort estudianteRepositoryPort,
                                              ProfesorRepositoryPort profesorRepositoryPort,
                                              CursoRepositoryPort cursoRepositoryPort,
-                                             PagoRepositoryPort pagoRepositoryPort) {
+                                             PagoRepositoryPort pagoRepositoryPort,
+                                             TareaRepositoryPort tareaRepositoryPort,
+                                             CalificacionRepositoryPort calificacionRepositoryPort) {
         return new DashboardServiceImpl(estudianteRepositoryPort, profesorRepositoryPort,
-                cursoRepositoryPort, pagoRepositoryPort);
+                cursoRepositoryPort, pagoRepositoryPort, tareaRepositoryPort, calificacionRepositoryPort);
     }
 
     @Bean
@@ -77,5 +81,17 @@ public class DomainConfig {
     @Bean
     public TareaUseCase tareaUseCase(TareaRepositoryPort tareaRepositoryPort) {
         return new TareaServiceImpl(tareaRepositoryPort);
+    }
+
+    @Bean
+    public EventoCalendarioUseCase eventoCalendarioUseCase(EventoCalendarioRepositoryPort eventoCalendarioRepositoryPort) {
+        return new EventoCalendarioServiceImpl(eventoCalendarioRepositoryPort);
+    }
+
+    @Bean
+    public ReportesUseCase reportesUseCase(CalificacionRepositoryPort calificacionRepositoryPort,
+                                           AsistenciaRepositoryPort asistenciaRepositoryPort,
+                                           PagoRepositoryPort pagoRepositoryPort) {
+        return new ReportesServiceImpl(calificacionRepositoryPort, asistenciaRepositoryPort, pagoRepositoryPort);
     }
 }
